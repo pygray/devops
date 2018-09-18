@@ -27,7 +27,7 @@
       </el-col>
       <el-col :span="18">
         <el-form ref="productForm" size="mini" :model="productForm" label-width="100px" v-show="showForm" :rules="productRules">
-          <el-form-item label="业务线名称" prop="service_name">
+          <el-form-item label="业务线名称" prop="name">
             <el-input v-model="productForm.name"  :disabled="disabled" placeholder="请输入项目/服务名称"></el-input>
           </el-form-item>
           <el-form-item label="上级业务线" prop="pid">
@@ -143,7 +143,7 @@
 
 <script>
   import { getUserList } from '@/api/account'
-  import { getProductTree, getProductLevel, getProductLevelInfo, addProduct, updateProduct, deleteProductLevelInfo, getServerList, getIdcsList } from '@/api/cmdb'
+  import { getProductTree, getProductLevel, getProductLevelInfo, createProduct, updateProduct, deleteProductLevelInfo, getServerList, getIdcsList } from '@/api/cmdb'
   export default {
     data() {
       return {
@@ -262,8 +262,9 @@
             return
           }
           if (this.productFlag === 'add') {
+            console.log(this.productForm)
             const params = Object.assign({}, this.productForm)
-            addProduct(params).then(res => {
+            createProduct(params).then(res => {
               this.$refs['productForm'].resetFields()
               this.$message.success('添加项目/服务成功')
               this.showForm = false

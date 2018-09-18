@@ -25,7 +25,7 @@ const Login = () => import('@/views/login/index')
 const Page = () => import('@/views/404')
 
 /* account */
-const Dashboard = () => import('@/views/dashboard/index')
+const Dashboard = () => import('@/views/dashboard/dashboard')
 const UserList = () => import('@/views/account/UserList')
 const GroupList = () => import('@/views/account/GroupList')
 const GroupPermissionList = () => import('@/views/account/GroupPermissionList')

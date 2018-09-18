@@ -80,11 +80,11 @@ export function getProductLevel(params) {
 }
 
 // 创建项目
-export function createProduct(params) {
+export function createProduct(data) {
   return request({
     url: '/product/',
     method: 'post',
-    params
+    data
   })
 }
 
