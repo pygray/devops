@@ -19,11 +19,12 @@ Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = true
 
+// compiler
+
 new Vue({
   el: '#app',
   router,
   store,
-  // template: '<App/>',
-  // components: { App }
-  render: h => h(App)
+  template: '<App/>',
+  components: { App }
 })

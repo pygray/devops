@@ -108,3 +108,21 @@ export function deleteGroupPermissions(id, params) {
     data: params
   })
 }
+
+// 获取用户组的前端菜单
+export function getGroupMenuList(id, params) {
+  return request({
+    url: '/groupmenus/' + id + '/',
+    method: 'get',
+    params
+  })
+}
+
+// 给指定用户组增加新的前端菜单
+export function updateGroupMenu(id, params) {
+  return request({
+    url: '/groupmenus/' + id + '/',
+    method: 'put',
+    data: params
+  })
+}

@@ -1,9 +1,9 @@
 import router from './router'
 import store from './store'
-import NProgress from 'nprogress' // Progress 进度条
-import 'nprogress/nprogress.css'// Progress 进度条样式
 import { Message } from 'element-ui'
-import { getToken } from '@/utils/auth' // 验权
+import NProgress from 'nprogress' // progress bar
+import 'nprogress/nprogress.css'// progress bar style
+import { getToken } from '@/utils/auth' // getToken from cookie
 
 NProgress.configure({ showSpinner: false })// NProgress Configuration
 
@@ -14,7 +14,7 @@ NProgress.configure({ showSpinner: false })// NProgress Configuration
 //   return roles.some(role => permissionRoles.indexOf(role) >= 0)
 // }
 
-const whiteList = ['/login']// no redirect whitelist
+const whiteList = ['/login', '/authredirect']// no redirect whitelist
 
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
@@ -36,7 +36,7 @@ router.beforeEach((to, from, next) => {
           })
           */
         }).catch(err => {
-          console.log(err.data)
+          console.log(err)
           store.dispatch('FedLogOut').then(() => {
             Message.error('Verification failed, please login again')
             next({ path: '/login' })
