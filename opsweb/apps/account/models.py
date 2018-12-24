@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from menu.models import Menu
 
 
 class UserProfile(AbstractUser):
@@ -13,5 +14,13 @@ class UserProfile(AbstractUser):
 
    class Meta:
        verbose_name = "用户表"
+       permissions = (
+           ("view_user", "cat view user"),
+       )
        db_table = "user_profile"
        ordering = ["id"]
+
+   def get_view_permissions(self):
+       if self.is_superuser:
+           return Menu.objects.all()
+       return Menu.objects.filter(groups__in=self.groups.all())

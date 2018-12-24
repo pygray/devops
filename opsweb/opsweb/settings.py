@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'cmdb.apps.CmdbConfig',
     'account.apps.AccountConfig',
     'tasks.apps.TasksConfig',
+    'menu.apps.MenuConfig',
 ]
 
 MIDDLEWARE = [
@@ -65,7 +66,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',  # 跨域设置
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -109,8 +110,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'devops',
         'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': '120.132.21.5',
+        'PASSWORD': 'qq4027721',
+        'HOST': '127.0.0.1',
         'PORT': 3306,
         'OPTIONS': {
             'init_command': 'SET default_storage_engine=INNODB;',
@@ -174,16 +175,16 @@ REST_FRAMEWORK = {
 
     # 定义全局权限
     'DEFAULT_PERMISSION_CLASSES': (
-        # 'rest_framework.permissions.DjangoModelPermissions',
-        'opsweb.permissions.Permissions',
+        'rest_framework.permissions.DjangoModelPermissions',
+        # 'opsweb.permissions.Permissions',
         # 'rest_framework.permissions.AllowAny',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        # json web token 验证
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         # CSRF验证
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-        # json web token 验证
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     )
 }
 

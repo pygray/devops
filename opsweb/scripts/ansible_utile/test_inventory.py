@@ -1,7 +1,7 @@
 from inventory import BaseInventory
 
 
-def Test():
+def  Test():
         """
         返回主机信息，组信息，组内主机信息
         :return:

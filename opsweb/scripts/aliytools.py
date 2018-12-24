@@ -15,9 +15,9 @@ django.setup()
 
 from cmdb.models import *
 
-accessKey_id = ""
-accessKey_secret = ""
-zone = ""
+accessKey_id = "LTAI2J9pjbbGxJrg"
+accessKey_secret = "xoZlQiqVts8ABP065nE1vHiBQFhgSF"
+zone = "cn-hangzhou"
 
 
 class AliyunApi:
@@ -26,7 +26,7 @@ class AliyunApi:
 
     def get_total_ip(self):
         """
-        :return: ip×ÜÊıÁ¿
+        :return: ipæ€»æ•°é‡
         """
         request = DescribeNetworkInterfacesRequest.DescribeNetworkInterfacesRequest()
         request.set_accept_format('json')
@@ -37,7 +37,7 @@ class AliyunApi:
 
     def request_to_ip(self):
         """
-        :return: ipĞÅÏ¢
+        :return: ipä¿¡æ¯
         """
         page_size = 50
         total_num_count = self.get_total_ip()
@@ -71,7 +71,7 @@ class AliyunApi:
 
     def get_total_disk(self):
         """
-        :return: ´ÅÅÌ×ÜÊıÁ¿
+        :return: ç£ç›˜æ€»æ•°é‡
         """
         request = DescribeDisksRequest.DescribeDisksRequest()
         request.set_accept_format('json')
@@ -82,7 +82,7 @@ class AliyunApi:
 
     def request_to_disk(self):
         """
-        :return:  ´ÅÅÌĞÅÏ¢
+        :return:  ç£ç›˜ä¿¡æ¯
         """
         page_size = 50
         total_num_count = self.get_total_disk()
@@ -106,7 +106,7 @@ class AliyunApi:
 
     def get_total_server(self):
         """
-        :return: ·şÎñÆ÷×ÜÊıÁ¿
+        :return: æœåŠ¡å™¨æ€»æ•°é‡
         """
         request = DescribeInstancesRequest.DescribeInstancesRequest()
         response = self.client.do_action_with_exception(request)
@@ -117,7 +117,7 @@ class AliyunApi:
     def get_ecs_info(self):
         """
 
-        :return: ·şÎñÆ÷ĞÅÏ¢
+        :return: æœåŠ¡å™¨ä¿¡æ¯
         """
         page_size = 50
         total_num_count = self.get_total_server()
@@ -155,16 +155,15 @@ class AliyunApi:
 
 
 if __name__ == "__main__":
-    ip_list = AliyunApi().request_to_ip()
-    disk_list = AliyunApi().request_to_disk()
+    #disk_list = AliyunApi().request_to_disk()
     server_list = AliyunApi().request_to_server()
     for server_info in server_list:
         try:
             try:
-                idc = Idc.objects.get(name="°¢ÀïÔÆ")
+                idc = Idc.objects.get(name="é˜¿é‡Œäº‘")
                 server_info["idc"] = idc
             except:
-                idc = Idc({"name": "°¢ÀïÔÆ"})
+                idc = Idc({"name": "é˜¿é‡Œäº‘"})
                 idc.save()
             finally:
                 server = Server(**server_info)

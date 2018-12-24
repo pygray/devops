@@ -5,6 +5,7 @@ from celery import shared_task
 from scripts.ansible_utile.test_runner import TestAdHocRunner
 
 
+# ansible 远程执行定时任务
 @shared_task
 def run_script(host, scpt_path_name):
     res = TestAdHocRunner(host, scpt_path_name)

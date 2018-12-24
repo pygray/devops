@@ -126,6 +126,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         product_interfaces = validated_data.pop("product_interface")
+        print(product_interfaces)
         ops_interfaces = validated_data.pop("ops_interface")
         dev_interfaces = validated_data.pop("dev_interface")
         idcs = validated_data.pop("idc")
