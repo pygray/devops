@@ -481,6 +481,7 @@ class UserInfoViewset(viewsets.ViewSet):
         data = {
             "username": self.request.user.username,
             "name": self.request.user.name,
-            "menus": get_menu_tree(self.request.user.get_view_permissions())
+            "menus": get_menu_tree(self.request.user.get_view_permissions()),
+            "permissions": list(self.request.user.get_group_permissions())
         }
         return Response(data)

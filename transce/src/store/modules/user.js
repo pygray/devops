@@ -6,7 +6,8 @@ const user = {
     token: getToken(),
     name: '',
     avatar: '',
-    menus: []
+    menus: [],
+    permissions: []
   },
 
   mutations: {

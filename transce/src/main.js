@@ -15,6 +15,10 @@ import store from './store'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+// 定义按钮全局权限验证变量
+import { hasPermission } from './utils/hasPermission'
+Vue.prototype.hasPerm = hasPermission
+
 Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = true
