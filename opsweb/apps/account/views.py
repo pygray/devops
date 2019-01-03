@@ -48,7 +48,7 @@ class UsersViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_class = UserFilter
-    filter_fields = ("keywords",)
+    filter_fields = ("keywords", )
     # permission_classes = (IsAdminUser, )
     # extra_perms_map = {
     #     "GET": ["users.view_user"]
@@ -90,7 +90,7 @@ class UsersViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         ret = {}
         if request.user.has_perm("account.delete_userprofile"):
-            return super(UsersViewSet, self).create(request, *args, **kwargs)
+            return super(UsersViewSet, self).destroy(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
         return response.Response(json.dumps(ret))
@@ -127,7 +127,7 @@ class GroupsViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         ret = {}
         if request.user.has_perm("auth.change_group"):
-            return super(GroupsViewSet, self).list(request, *args, **kwargs)
+            return super(GroupsViewSet, self).update(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
         return response.Response(json.dumps(ret))
@@ -135,7 +135,7 @@ class GroupsViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         ret = {}
         if request.user.has_perm("auth.change_group"):
-            return super(GroupsViewSet, self).list(request, *args, **kwargs)
+            return super(GroupsViewSet, self).retrieve(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
         return response.Response(json.dumps(ret))
@@ -143,7 +143,7 @@ class GroupsViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         ret = {}
         if request.user.has_perm("auth.delete_group"):
-            return super(GroupsViewSet, self).list(request, *args, **kwargs)
+            return super(GroupsViewSet, self).destroy(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
         return response.Response(json.dumps(ret))
@@ -151,7 +151,7 @@ class GroupsViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         ret = {}
         if request.user.has_perm("auth.create_group"):
-            return super(GroupsViewSet, self).list(request, *args, **kwargs)
+            return super(GroupsViewSet, self).create(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
         return response.Response(json.dumps(ret))

@@ -42,7 +42,7 @@
           </el-table-column>
           <el-table-column
             prop="department"
-            label="department"
+            label="部门"
             align="center">
           </el-table-column>
           <el-table-column
@@ -154,7 +154,7 @@
             <el-form-item label="姓名" prop="name">
               <el-input v-model="changeMobileForm.name" placeholder="请输入姓名"></el-input>
             </el-form-item>
-            <el-form-item label="部门(选填)" prop="department">
+            <el-form-item label="部门" prop="department">
               <el-input v-model="changeMobileForm.department" placeholder="请输入部门"></el-input>
             </el-form-item>
           </el-form>
@@ -199,7 +199,8 @@ export default {
         name: '',
         password: '',
         phone: '',
-        email: ''
+        email: '',
+        department: ''
       },
       addUserRule: {
         username: [
@@ -216,6 +217,9 @@ export default {
         ],
         email: [
           { required: true, message: '请输入邮箱', trigger: 'blur', type: 'email' }
+        ],
+        department: [
+          { required: true, message: '请输入部门', trigger: 'blur' }
         ]
       },
       rolesList: [], // 角色列表
