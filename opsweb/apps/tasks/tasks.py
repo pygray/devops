@@ -1,15 +1,14 @@
 # Create your tasks here
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
-
-from scripts.ansible_utile.test_runner import TestAdHocRunner
-
+from scripts.ansible_test_api import AnsibleApi
 
 # ansible 远程执行定时任务
 @shared_task
-def run_script(host, scpt_path_name):
-    res = TestAdHocRunner(host, scpt_path_name)
-    print(res)
+def run_playbook():
+    ansible_api = AnsibleApi()
+    playbook_path = ['/etc/ansible/test.yml']
+    res = ansible_api.runplayBook(playbook_path)
     return res
 
 
