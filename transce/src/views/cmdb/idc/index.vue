@@ -7,7 +7,7 @@
         </el-input>
       </el-col>
       <div class="add-idc-btn">
-        <el-button v-if="hasPerm('cmdb.view_idc')" type="primary" @click="addClick">新增厂商</el-button>
+        <el-button v-if="hasPerm('cmdb.add_idc')" type="primary" @click="addClick">新增厂商</el-button>
       </div>
     </div>
 

@@ -3,7 +3,7 @@
       <div style="margin-bottom:20px;font-size:14px;">{{ '修改权限：' + name }}</div>
       <el-row :gutter="24">
         <el-col :span="12" >
-          <el-input placeholder="搜索" v-model="search_name" @keyup.enter.native="searchClick">
+          <el-input placeholder="搜索" v-model="keywords" @keyup.enter.native="searchClick">
                 <el-button slot="append" icon="el-icon-search" @click="searchClick"></el-button>
             </el-input>
         </el-col>
@@ -68,7 +68,7 @@ export default {
       total_num: 0,
       page: 1,
       loading: true,
-      search_name: '',
+      keywords: '',
       gid: ''
     }
   },
@@ -81,7 +81,7 @@ export default {
   methods: {
     fetchData() {
       this.loading = true
-      getGroupPermissionsList(this.gid, { page: this.page, name: this.search_name, modify: true }).then(res => {
+      getGroupPermissionsList(this.gid, { page: this.page, name: this.keywords, modify: true }).then(res => {
         this.permissionList = res.results
         this.total_num = res.count
         this.loading = false

@@ -104,6 +104,9 @@
             <el-form-item label="手机号" prop="phone">
               <el-input v-model="addUserForm.phone" placeholder="请输入手机号"></el-input>
             </el-form-item>
+            <el-form-item label="部门" prop="department">
+              <el-input v-model="addUserForm.department" placeholder="请输入部门"></el-input>
+            </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
               <el-button @click="addUserFormVisible = false">取 消</el-button>

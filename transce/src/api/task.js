@@ -95,3 +95,38 @@ export function deleteTaskResult(id) {
     method: 'delete'
   })
 }
+
+// 获取批量任务列表
+export function getBatchTaskList(params) {
+  return request({
+    url: '/batch_task/',
+    method: 'get',
+    params
+  })
+}
+
+// 创建批量任务
+export function createBatchTask(data) {
+  return request({
+    url: '/batch_task/',
+    method: 'post',
+    data
+  })
+}
+
+// 执行批量任务
+export function updateBatchTask(id, data) {
+  return request({
+    url: '/batch_task/' + id + '/',
+    method: 'patch',
+    data
+  })
+}
+
+// 批量任务详情
+export function detailBatchTask(id) {
+  return request({
+    url: '/batch_task/' + id + '/',
+    method: 'get'
+  })
+}
