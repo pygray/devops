@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from .filters import TaskFilter, TaskResultFilter, BacthTaskFilter
 from celery import current_app
 from .serializers import TaskSerializer, CrontabSerializer, TaskResultSerializer, BatchTasksSerializer
-from scripts.ansible_test_api import AnsibleApi
+from scripts.ansible_api import ANSRunner
 import json
 
 
@@ -243,16 +243,19 @@ class BatchTasksViewSet(viewsets.ModelViewSet):
     filter_class = BacthTaskFilter
     filter_fields = ("keywords", )
     def partial_update(self, request, *args, **kwargs):
-         pk = int(kwargs.get("pk"))
-         data = request.data
-         task = BatchTasks.objects.get(pk=pk)
-         rbt = AnsibleApi()
-         print(task.playbook.path)
-         res = rbt.runplayBook(task.playbook.path)
-         data['detail_result'] = json.dumps(res)
-
-         BatchTasks.objects.filter(pk=pk).update(**data)
-         return response.Response(status=status.HTTP_204_NO_CONTENT)
+        from datetime import datetime
+        pk = int(kwargs.get("pk"))
+        data = request.data
+        user = request.user.username
+        task = BatchTasks.objects.get(pk=pk)
+        playbook_path = task.playbook.path
+        rbt = ANSRunner()
+        rbt.run_playbook(playbook_path)
+        data['exec_time'] = datetime.now()
+        data['user'] = user
+        data['detail_result'] = json.dumps(rbt.get_playbook_result(), indent=4)
+        BatchTasks.objects.filter(pk=pk).update(**data)
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
 

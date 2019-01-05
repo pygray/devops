@@ -19,6 +19,11 @@ const Service = () => import('@/views/cmdb/service/index')
 const Task = () => import('@/views/tasks/cronTask/tasks')
 const historyTask = () => import('@/views/tasks/cronTask/history')
 const Crontab = () => import('@/views/tasks/cronTask/crontabs')
+
+/* batch tasks */
+const batchTaskApply = () => import('@/views/tasks/batchTask/add/index')
+const batchTaskList = () => import('@/views/tasks/batchTask/list/index')
+
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -132,6 +137,27 @@ export const asyncRouterMap = [
         name: '历史任务',
         component: historyTask,
         meta: { title: '历史任务', icon: 'list', roles: ['tasks.view_task_profile'] }
+      }
+    ]
+  },
+  {
+    path: '/batch_task',
+    component: Layout,
+    redirect: '/batch_task/list',
+    name: '批量任务',
+    meta: { title: '批量任务', icon: 'documentation', roles: ['tasks.view_batchTask'] },
+    children: [
+      {
+        path: 'apply',
+        name: '申请任务',
+        component: batchTaskApply,
+        meta: { title: '申请任务', icon: 'list', roles: ['tasks.view_batchTask'] }
+      },
+      {
+        path: 'list',
+        name: '任务列表',
+        component: batchTaskList,
+        meta: { title: '任务列表', icon: 'list', roles: ['tasks.view_batchTask'] }
       }
     ]
   },

@@ -11,8 +11,8 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="onSubmit($event)">Create</el-button>
-        <el-button @click="onCancel">Cancel</el-button>
+        <el-button type="primary" @click="onSubmit($event)">创建</el-button>
+        <el-button @click="onCancel">退出</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -50,11 +50,11 @@
             return
           }
           event.preventDefault()
-          let formData = new FormData()
+          const formData = new FormData()
           formData.append('name', this.form.name)
           formData.append('playbook', this.form.playbook)
 
-          let config = {
+          const config = {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
@@ -64,7 +64,7 @@
               message: '创建成功',
               type: 'success'
             })
-            this.$router.push({ path: '/tasks/list' })
+            this.$router.push({ path: '/batch_task/list' })
           })
         })
       },

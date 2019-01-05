@@ -18,7 +18,7 @@ class MyInventory:
     def __init__(self, resource, loader, variable_manager):
         self.resource = resource
         self.loader = DataLoader()
-        self.inventory = InventoryManager(loader=self.loader, sources=["128.1.40.70"])
+        self.inventory = InventoryManager(loader=self.loader, sources=['/etc/ansible/hosts'])
         self.variable_manager = VariableManager(loader=self.loader, inventory=self.inventory)
         self.dynamic_inventory()
 
@@ -245,10 +245,10 @@ class ANSRunner(object):
         return self.results_raw
 
 
-if __name__ == '__main__':
-    rbt = ANSRunner()
-    #rbt.run_playbook(playbook_path='/home/liuziping/restfuldemo/playbook/2018/08/playbook.yml')
-    #result = json.dumps(rbt.get_playbook_result(),indent=4)
-    rbt.run_model("128.1.40.70",'shell','uptime')
-    result = json.dumps(rbt.get_model_result(), indent=4)
-    print(result)
+# if __name__ == '__main__':
+#     rbt = ANSRunner()
+#     #rbt.run_playbook(playbook_path='/home/liuziping/restfuldemo/playbook/2018/08/playbook.yml')
+#     #result = json.dumps(rbt.get_playbook_result(),indent=4)
+#     rbt.run_model("128.1.40.70",'shell','uptime')
+#     result = json.dumps(rbt.get_model_result(), indent=4)
+#     print(result)

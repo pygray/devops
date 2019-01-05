@@ -32,6 +32,7 @@ class BatchTasks(models.Model):
     status = models.CharField(max_length=1, choices=(('Y', '已执行'), ('N', '未执行')), default='N', verbose_name='执行状态')
     add_time = models.DateTimeField(auto_now_add=True, verbose_name=u'任务创建时间')
     exec_time = models.DateTimeField(auto_now=True, verbose_name=u'执行时间')
+    user = models.CharField("执行用户", max_length=50, null=True, help_text="执行用户")
 
     def __str__(self):
         return self.name

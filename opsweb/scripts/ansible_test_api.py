@@ -117,16 +117,16 @@ class AnsibleApi(object):
                                     variable_manager=self.variable_manager,
                                     loader=self.loader, options=self.options, passwords=self.passwords)
         result = playbook.run()
-        print(result)
+        return result
 
 
 # if __name__ == "__main__":
 #     ansible_api = AnsibleApi()
-#     host_list = ['test']
-#     # tasks_list=[
-#     #
-#     #     dict(action=dict(module='ping', args='')),
-#     #     # dict(action=dict(module='debug', args=dict(msg='{{shell_out.stdout}}')))
-#     # ]
-#     # ansible_api.runadHoc(host_list, tasks_list)
-#     ansible_api.runplayBook(['/etc/ansible/test.yml'])
+    # host_list = ['test']
+    # tasks_list=[
+    #
+    #     dict(action=dict(module='ping', args='')),
+    #     # dict(action=dict(module='debug', args=dict(msg='{{shell_out.stdout}}')))
+    # ]
+    # ansible_api.runadHoc(host_list, tasks_list)
+    # ansible_api.runplayBook(['/etc/ansible/test.yml'])
