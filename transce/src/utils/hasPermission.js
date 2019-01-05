@@ -4,7 +4,6 @@ import store from '../store'
 
 export function hasPermission(permission) {
   const myBtns = store.getters.roles
-  console.log(myBtns)
   // 管理员显示所有权限
   if (myBtns[0] === 'admin') {
     return true
