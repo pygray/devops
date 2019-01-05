@@ -12,9 +12,9 @@ class UserProfile(AbstractUser):
        return self.username
 
    class Meta:
-       verbose_name = "用户表"
+       verbose_name = "用户"
        permissions = (
-           ("view_user", "cat view user"),
+           ("view_user", "查看用户"),
        )
        db_table = "user_profile"
        ordering = ["id"]

@@ -20,7 +20,7 @@ class TaskProfile(models.Model):
     class Meta:
         verbose_name = "task任务衍生表"
         permissions = (
-            ("view_task_profile", "cat view task_profile"),
+            ("view_task_profile", "查看任务"),
         )
         db_table = "task_profile"
         ordering = ["id"]
@@ -38,7 +38,7 @@ class BatchTasks(models.Model):
 
     class Meta:
         permissions = (
-            ("view_batchTask", "cat view batchTask"),
+            ("view_batchTask", "查看批量任务"),
         )
         verbose_name = '批量任务'
         verbose_name_plural = verbose_name

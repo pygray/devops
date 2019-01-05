@@ -25,9 +25,9 @@ class Idc(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = "厂商表"
+        verbose_name = "厂商"
         permissions = (
-            ("view_idc", "cat view idc"),
+            ("view_idc", "查看厂商"),
         )
         db_table = "resource_idc"
         ordering = ["id"]
@@ -43,10 +43,10 @@ class Env(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = "环境表"
+        verbose_name = "环境"
         db_table = "resource_env"
         permissions = (
-            ("view_env", "cat view env"),
+            ("view_env", "查看环境"),
         )
         ordering = ["id"]
 
@@ -64,8 +64,9 @@ class Product(models.Model):
 
     class Meta:
         db_table = 'resource_product'
+        verbose_name = "业务"
         permissions = (
-            ("view_product", "can view products"),
+            ("view_product", "查看业务线"),
         )
         ordering = ["id"]
 
@@ -92,10 +93,10 @@ class Server(models.Model):
         return self.hostname
 
     class Meta:
-        verbose_name = "服务器表"
+        verbose_name = "服务器"
         db_table = "resource_server"
         permissions = (
-            ("view_server", "cat view server"),
+            ("view_server", "查看服务器"),
         )
         ordering = ["id"]
 #
