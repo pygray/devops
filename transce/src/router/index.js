@@ -16,9 +16,9 @@ const Server = () => import('@/views/cmdb/server/index')
 const Service = () => import('@/views/cmdb/service/index')
 
 /* task */
-const Task = () => import('@/views/tasks/tasks')
-const historyTask = () => import('@/views/tasks/history')
-const crontabs = () => import('@/views/tasks/crontabs')
+const Task = () => import('@/views/tasks/cronTask/tasks')
+const historyTask = () => import('@/views/tasks/cronTask/history')
+const Crontab = () => import('@/views/tasks/cronTask/crontabs')
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -84,7 +84,7 @@ export const asyncRouterMap = [
   {
     path: '/assets',
     component: Layout,
-    redirect: '/assets/list',
+    // redirect: '/assets/list',
     name: '资产管理',
     meta: { title: '资产管理', icon: 'documentation', roles: ['cmdb.view_idc'] },
     children: [
@@ -111,27 +111,27 @@ export const asyncRouterMap = [
   {
     path: '/tasks',
     component: Layout,
-    redirect: '/tasks/list',
+    // redirect: '/tasks/list',
     name: '定时任务',
     meta: { title: '定时任务', icon: 'documentation', roles: ['tasks.view_task_profile'] },
     children: [
       {
         path: 'list',
-        name: '定时任务列表',
+        name: '任务列表',
         component: Task,
-        meta: { title: '定时任务列表', icon: 'list', roles: ['tasks.view_task_profile'] }
+        meta: { title: '任务列表', icon: 'list', roles: ['tasks.view_task_profile'] }
       },
       {
         path: 'contabs',
-        name: 'crontab表达式',
-        component: crontabs,
-        meta: { title: 'crontab表达式', icon: 'list', roles: ['django_celery_beat.add_crontabschedule'] }
+        name: 'crontab',
+        component: Crontab,
+        meta: { title: 'crontab', icon: 'list', roles: ['django_celery_beat.add_crontabschedule'] }
       },
       {
         path: 'history',
-        name: '历史定时任务',
+        name: '历史任务',
         component: historyTask,
-        meta: { title: '历史定时任务', icon: 'list', roles: ['tasks.view_task_profile'] }
+        meta: { title: '历史任务', icon: 'list', roles: ['tasks.view_task_profile'] }
       }
     ]
   },
