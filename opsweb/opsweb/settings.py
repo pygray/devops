@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     'cmdb.apps.CmdbConfig',
     'account.apps.AccountConfig',
     'tasks.apps.TasksConfig',
-    'menu.apps.MenuConfig',
 ]
 
 MIDDLEWARE = [
@@ -161,6 +160,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# 指定上传访问地址
+MEDIA_URL = '/media/'
+# 指定上传目录
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
     "PAGE_SIZE": 10,

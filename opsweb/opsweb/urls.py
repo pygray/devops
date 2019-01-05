@@ -21,13 +21,11 @@ from rest_framework_jwt.views import obtain_jwt_token
 from cmdb.router import cmdb_router
 from account.router import account_router
 from tasks.router import task_router
-from menu.router import menu_router
 
 router = DefaultRouter()
 router.registry.extend(account_router.registry)
 router.registry.extend(cmdb_router.registry)
 router.registry.extend(task_router.registry)
-router.registry.extend(menu_router.registry)
 
 urlpatterns = [
     url(r'^', include(router.urls)),

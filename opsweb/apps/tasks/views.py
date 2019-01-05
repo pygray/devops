@@ -2,12 +2,12 @@ from __future__ import absolute_import, unicode_literals
 from rest_framework import viewsets, response, status, mixins
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
 from django_celery_results.models import TaskResult
-from .models import TaskProfile
+from .models import TaskProfile, BatchTasks
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
-from .filters import TaskFilter, TaskResultFilter
+from .filters import TaskFilter, TaskResultFilter, BacthTaskFilter
 from celery import current_app
-from .serializers import TaskSerializer, CrontabSerializer, TaskResultSerializer
-
+from .serializers import TaskSerializer, CrontabSerializer, TaskResultSerializer, BatchTasksSerializer
+from scripts.ansible_test_api import AnsibleApi
 import json
 
 
@@ -225,6 +225,34 @@ class SelectTaskViewSet(viewsets.ViewSet):
                           if not name.startswith('celery.')))
         t_list = [{"id": k+1, "name": v} for k, v in enumerate(tasks_list)]
         return t_list
+
+class BatchTasksViewSet(viewsets.ModelViewSet):
+    """
+    create:
+    创建任务
+    list:
+    获取热么列表
+    retrieve:
+    获取任务信息
+    update:
+    执行任务
+    """
+    permission_classes = (IsAuthenticated,)
+    queryset = BatchTasks.objects.all()
+    serializer_class = BatchTasksSerializer
+    filter_class = BacthTaskFilter
+    filter_fields = ("keywords", )
+    def partial_update(self, request, *args, **kwargs):
+         pk = int(kwargs.get("pk"))
+         data = request.data
+         task = BatchTasks.objects.get(pk=pk)
+         rbt = AnsibleApi()
+         print(task.playbook.path)
+         res = rbt.runplayBook(task.playbook.path)
+         data['detail_result'] = json.dumps(res)
+
+         BatchTasks.objects.filter(pk=pk).update(**data)
+         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
 

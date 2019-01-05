@@ -1,6 +1,7 @@
 from django_celery_beat.models import PeriodicTask, PeriodicTask, IntervalSchedule, CrontabSchedule
 from django_celery_results.models import TaskResult
 from rest_framework import serializers
+from .models import BatchTasks
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -61,3 +62,19 @@ class TaskResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskResult
         fields = "__all__"
+
+
+class BatchTasksSerializer(serializers.ModelSerializer):
+    """
+    浠诲姟搴忓垪鍖栫被
+    """
+
+    class Meta:
+        model = BatchTasks
+        fields = "__all__"
+
+    def create(self, validated_data):
+        print(validated_data)
+        instance = self.Meta.model.objects.create(**validated_data)
+        instance.save()
+        return instance

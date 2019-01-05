@@ -117,15 +117,7 @@ class AnsibleApi(object):
                                     variable_manager=self.variable_manager,
                                     loader=self.loader, options=self.options, passwords=self.passwords)
         result = playbook.run()
-        result_raw = {'success': {}, 'failed': {}, 'unreachable': {}}
-        for host, result in self.callback.host_ok.items():
-            result_raw['success'][host] = result._result
-        for host, result in self.callback.host_failed.items():
-            result_raw['failed'][host] = result._result
-
-        print(json.dumps(result_raw, indent=4))
-
-        return json.dumps(result_raw, indent=4)
+        print(result)
 
 
 # if __name__ == "__main__":

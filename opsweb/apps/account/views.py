@@ -9,7 +9,6 @@ from django.contrib.auth.models import Group, Permission
 from .serializers import UserSerializer, UserRegSerializer, GroupSerializer, PermissionSerializer
 from rest_framework import viewsets, mixins, permissions
 from rest_framework.response import Response
-from menu.common import get_menu_tree
 
 from account.common import get_user_obj, get_permission_obj
 import json
@@ -478,10 +477,13 @@ class UserInfoViewset(viewsets.ViewSet):
     #     return [{k: v} for k, v in enumerate(roles)]
 
     def list(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            roles = ['admin']
+        else:
+            roles = list(self.request.user.get_group_permissions())
         data = {
             "username": self.request.user.username,
             "name": self.request.user.name,
-            "menus": get_menu_tree(self.request.user.get_view_permissions()),
-            "permissions": list(self.request.user.get_group_permissions())
+            "roles": roles
         }
         return Response(data)
