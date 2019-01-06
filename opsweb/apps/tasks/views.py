@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from .filters import TaskFilter, TaskResultFilter, BacthTaskFilter
 from celery import current_app
 from .serializers import TaskSerializer, CrontabSerializer, TaskResultSerializer, BatchTasksSerializer
-from scripts.ansible_api import ANSRunner
+from .tasks import run_batch_task
 import json
 
 
@@ -249,11 +249,12 @@ class BatchTasksViewSet(viewsets.ModelViewSet):
         user = request.user.username
         task = BatchTasks.objects.get(pk=pk)
         playbook_path = task.playbook.path
-        rbt = ANSRunner()
-        rbt.run_playbook(playbook_path)
+        res = run_batch_task.delay(playbook_path)
+        # rbt = ANSRunner()
+        # rbt.run_playbook(playbook_path)
         data['exec_time'] = datetime.now()
         data['user'] = user
-        data['detail_result'] = json.dumps(rbt.get_playbook_result(), indent=4)
+        data['detail_result'] = res.get() # 获取celery异步结果
         BatchTasks.objects.filter(pk=pk).update(**data)
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
