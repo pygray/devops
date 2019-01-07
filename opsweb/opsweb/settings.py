@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'cmdb.apps.CmdbConfig',
     'account.apps.AccountConfig',
     'tasks.apps.TasksConfig',
+    'release.apps.ReleaseConfig',
 ]
 
 MIDDLEWARE = [
@@ -194,6 +195,13 @@ REST_FRAMEWORK = {
 
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7)
+}
+
+JENKINS = {
+    'JENKINS_URL': 'http://120.132.21.5:8080 ',
+    'JENKINS_TOKEN': 'c9595c464126adbb77752813c0606df1',
+    'JENKINS_USERNAME': 'admin',
+    'JENKINS_PASSWORD': 'awd0123!@#'
 }
 
 # LOGGING = {

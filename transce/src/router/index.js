@@ -24,6 +24,11 @@ const Crontab = () => import('@/views/tasks/cronTask/crontabs')
 const batchTaskApply = () => import('@/views/tasks/batchTask/add/index')
 const batchTaskList = () => import('@/views/tasks/batchTask/list/index')
 
+/* release */
+const releaseApply = () => import('@/views/release/apply/index')
+const releaseList = () => import('@/views/release/list/index')
+const releaseHistory = () => import('@/views/release/history/index')
+
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -158,6 +163,33 @@ export const asyncRouterMap = [
         name: '任务列表',
         component: batchTaskList,
         meta: { title: '任务列表', icon: 'list', roles: ['tasks.view_batchTask'] }
+      }
+    ]
+  },
+  {
+    path: '/deploy',
+    component: Layout,
+    redirect: '/deploy/apply',
+    name: '代码上线',
+    meta: { title: '代码上线', icon: 'documentation', roles: ['release.view_deploy'] },
+    children: [
+      {
+        path: 'apply',
+        name: '申请上线',
+        component: releaseApply,
+        meta: { title: '申请上线', icon: 'list', roles: ['release.add_deploy'] }
+      },
+      {
+        path: 'list',
+        name: '申请列表',
+        component: releaseList,
+        meta: { title: '申请列表', icon: 'list', roles: ['release.change_deploy'] }
+      },
+      {
+        path: 'history',
+        name: '上线列表',
+        component: releaseHistory,
+        meta: { title: '上线列表', icon: 'list', roles: ['release.view_deploy'] }
       }
     ]
   },
