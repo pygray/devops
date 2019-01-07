@@ -2,7 +2,7 @@
   <div class="apply">
     <el-form :model="form" :rules="rules" ref="form" label-width="180px">
       <el-form-item label="选择项目：" prop="name">
-        <el-select v-model="form.name" placeholder="请选择工单类型" style="width: 60%;" @change="getTag($event)">
+        <el-select v-model="form.name" placeholder="请选择项目" style="width: 60%;" @change="getTag($event)">
           <el-option
             v-for="item in project_list"
             :key="item.index"
@@ -21,7 +21,7 @@
       </el-form-item>
 
       <el-form-item label="指派给：" prop="assign_to">
-        <el-select v-model="form.reviewer" filterable placeholder="请选择工单处理人" style="width: 60%;">
+        <el-select v-model="form.reviewer" filterable placeholder="请选择发布处理人" style="width: 60%;">
           <el-option
             v-for="item in sa_list"
             :key="item.index"
@@ -59,16 +59,16 @@
         },
         rules: {
           name: [
-            { required: true, message: '请输入工单类型', trigger: 'blur' }
+            { required: true, message: '请输入项目', trigger: 'blur' }
           ],
           version: [
-            { required: true, message: '请输人工单标题', trigger: 'blur' }
+            { required: true, message: '请输入项目版本', trigger: 'blur' }
           ],
           info: [
-            { required: true, message: '请输人工单内容', trigger: 'blur' }
+            { required: true, message: '请输入版本信息', trigger: 'blur' }
           ],
           reviewer: [
-            { required: true, message: '请输人工单指派人', trigger: 'blur' }
+            { required: true, message: '请输入发布指派人', trigger: 'blur' }
           ],
 
         },
