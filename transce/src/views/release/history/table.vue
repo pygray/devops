@@ -61,10 +61,8 @@
   </div>
 </template>
 
-
 <script>
   import moment from 'moment'
-
   export default {
     name: 'deploy-list',
     props: ['value'],
@@ -79,15 +77,12 @@
         if (date === undefined) {
           return ''
         }
-        return moment(date).format('YYYY-MM-DD HH:mm:ss');
+        return moment(date).format('YYYY-MM-DD HH:mm:ss')
       }
 
     }
   }
 </script>
-
 <style lang='scss'>
   .deploy-list {}
 </style>
-
-

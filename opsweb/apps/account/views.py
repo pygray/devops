@@ -6,7 +6,7 @@ from rest_framework.generics import get_object_or_404
 from django.db.models import Q
 from .filters import UserFilter, GroupFilter, PermissionFilter
 from django.contrib.auth.models import Group, Permission
-from .serializers import UserSerializer, UserRegSerializer, GroupSerializer, PermissionSerializer
+from .serializers import UserSerializer, UserRegSerializer, Groupserializer, PermissionSerializer
 from rest_framework import viewsets, mixins, permissions
 from rest_framework.response import Response
 
@@ -109,7 +109,7 @@ class GroupsViewSet(viewsets.ModelViewSet):
     删除角色
     """
     queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+    serializer_class = Groupserializer
     filter_class = GroupFilter
     filter_fields = ("keywords",)
     # permission_classes = (IsAdminUser,)
@@ -160,126 +160,55 @@ class GroupsViewSet(viewsets.ModelViewSet):
         queryset = queryset.order_by("id")
         return queryset
 
-
-class UserGroupsViewSet(mixins.RetrieveModelMixin,
-                        mixins.UpdateModelMixin,
+class UserGroupsViewSet(mixins.UpdateModelMixin,
                         viewsets.GenericViewSet):
+
     """
-    retrieve:
-    返回指定用户的所有角色
     update:
-    修改当前用户的角色
+    修改指定用户的角色
     """
+    permission_classes = (permissions.IsAuthenticated,)
+
     queryset = User.objects.all()
-    serializer_class = GroupSerializer
-    # permission_classes = (IsAdminUser,)
+    serializer_class = UserSerializer
 
-    def retrieve(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("account.view_user"):
-            user_obj = self.get_object()
-            queryset = user_obj.groups.all()
-
-            page = self.paginate_queryset(queryset)
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
-
+    # 重写update方法，只针对用户和组进行单独的处理，类似的场景还有修改密码，更改状态等
     def update(self, request, *args, **kwargs):
         ret = {}
         if request.user.has_perm("auth.change_user"):
             user_obj = self.get_object()
-            gids = request.data.get("gid", [])
-            user_obj.groups = Group.objects.filter(id__in=gids)
+            roles = request.data.get("role", [])
+            user_obj.groups = roles
             return Response(status=status.HTTP_204_NO_CONTENT)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
         return response.Response(json.dumps(ret))
 
-    def get_queryset(self):
-        queryset = super(UserGroupsViewSet, self).get_queryset()
-        return queryset.order_by("id")
 
-
-class GroupMembersViewSet(mixins.RetrieveModelMixin,
-                          mixins.UpdateModelMixin,
-                          mixins.DestroyModelMixin,
+class GroupMembersViewSet(mixins.DestroyModelMixin,
                           viewsets.GenericViewSet):
     """
-        角色成员管理
-        retrieve:
-        返回指定组的成员列表
-        update:
-        往指定组里添加成员
-        destroy:
-        从指定组里删除成员
-        """
+    destroy:
+    从指定组里删除指定成员
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
     queryset = Group.objects.all()
-    serializer_class = UserSerializer
-
-    def retrieve(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("account.view_user"):
-            instance = self.get_object()
-            try:
-                queryset = instance.user_set.all()
-            except AttributeError:
-                raise Http404
-            username = request.GET.get("username", None)
-            if username is not None:
-                queryset = queryset.filter(Q(name__icontains=username) | Q(username__icontains=username))
-            queryset = self.filter_queryset(queryset)
-            page = self.paginate_queryset(queryset)
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
-
-    def update(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("auth.change_group"):
-            ret = {"status": 0}
-            group_obj = self.get_object()
-            user_obj = get_user_obj(request.data.get(request.data.get("uid", 0)))
-            if user_obj is None:
-                ret["status"] = 1
-                ret["errmsg"] = "用户错误"
-            else:
-                group_obj.user_set.add(user_obj)
-            return Response(ret, status=status.HTTP_200_OK)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+    serializer_class = Groupserializer
 
     def destroy(self, request, *args, **kwargs):
         ret = {}
         if request.user.has_perm("auth.delete_group"):
-            ret = {"status": 0}
             group_obj = self.get_object()
-            user_obj = get_user_obj(request.data.get("uid", 0))
-            if user_obj is None:
-                ret["status"] = 1
-                ret["errmsg"] = "用户错误"
-            else:
-                group_obj.user_set.remove(user_obj)
-            return Response(ret, status=status.HTTP_200_OK)
+            uid = request.data.get('uid', 0)
+            group_obj.user_set.remove(int(uid))
+            return Response(status=status.HTTP_200_OK)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
         return response.Response(json.dumps(ret))
 
 
-class PermissionsViewset(viewsets.ReadOnlyModelViewSet):
+class PermissionViewSet(viewsets.ReadOnlyModelViewSet):
     """
     权限列表 视图类
     list:
@@ -294,135 +223,36 @@ class PermissionsViewset(viewsets.ReadOnlyModelViewSet):
         ret = {}
         # if request.user.has_perm("account.view_permission"):
         if request.user.has_perm("account.view_user)"):
-            return super(PermissionsViewset, self).list(request, *args, **kwargs)
+            return super(PermissionViewSet, self).list(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
         return response.Response(json.dumps(ret))
 
     def get_queryset(self):
-        queryset = super(PermissionsViewset, self).get_queryset()
+        queryset = super(PermissionViewSet, self).get_queryset()
         queryset = queryset.order_by("content_type__id")
         return queryset
 
 
-class GroupPermissionsViewset(viewsets.GenericViewSet,
-                              mixins.UpdateModelMixin,
-                              mixins.DestroyModelMixin,
-                              mixins.ListModelMixin):
+class GroupsPermViewSet(mixins.UpdateModelMixin,
+                        viewsets.GenericViewSet):
+
     """
-    用户组权限
-    retrieve:
-    返回用户组的权限列表
     update:
-    给指定用户组增加权限，参数pid: permission id
-    destroy:
-    删除指定组下的权限，参数pid: permission id
+    修改指定角色的权限
     """
+    permission_classes = (permissions.IsAuthenticated,)
 
-    queryset = Permission.objects.all()
-    serializer_class = PermissionSerializer
-    filter_class = PermissionFilter
-    filter_fields = ("keywords",)
-
-    def process_permission(self, group_permission_queryset, data):
-        for record in data:
-            try:
-                group_permission_queryset.get(pk=record.get("id", None))
-                record["status"] = True
-            except:
-                pass
-        return data
-
-    def get_group_permissions(self):
-        groupobj = self.get_object()
-        queryset = groupobj.permissions.all()
-        queryset = self.filter_queryset(queryset)
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return response.Response(serializer.data)
-
-    def get_modify_permissions(self):
-        groupobj = self.get_object()
-        group_permission_queryset = groupobj.permissions.all()
-        queryset = Permission.objects.all()
-        queryset = self.filter_queryset(queryset)
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(self.process_permission(group_permission_queryset, serializer.data))
-
-        serializer = self.get_serializer(queryset, many=True)
-        return response.Response(self.process_permission(group_permission_queryset, serializer.data))
-
-    def list(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("account.view_user"):
-            return super(GroupPermissionsViewset, self).list(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
-
-    def retrieve(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("account.view_user"):
-            modify = request.GET.get("modify", None)
-            if modify is not None:
-                return self.get_modify_permissions()
-            else:
-                return self.get_group_permissions()
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
-
-    def get_object(self):
-        queryset = Group.objects.all()
-        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
-
-        assert lookup_url_kwarg in self.kwargs, (
-            'Expected view %s to be called with a URL keyword argument '
-            'named "%s". Fix your URL conf, or set the `.lookup_field` '
-            'attribute on the view correctly.' %
-            (self.__class__.__name__, lookup_url_kwarg)
-        )
-
-        filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
-        obj = get_object_or_404(queryset, **filter_kwargs)
-
-        # May raise a permission denied
-        self.check_object_permissions(self.request, obj)
-        return obj
+    queryset = Group.objects.all()
+    serializer_class = Groupserializer
 
     def update(self, request, *args, **kwargs):
         ret = {}
-        if request.user.has_perm("auth.change_permission"):
-            ret = {"status": 0}
-            groupobj = self.get_object()
-            permission_obj = get_permission_obj(request.data.get("pid", ""))
-            if permission_obj is None:
-                ret["status"] = 1
-                ret["errmsg"] = "permission 不存在"
-            else:
-                groupobj.permissions.add(permission_obj)
-            return response.Response(ret, status=status.HTTP_200_OK)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
-
-    def destroy(self, request, *args, **kwargs):
-        ret = {"status": 0}
-        if request.user.has_perm("auth.delete_permission"):
-            groupobj = self.get_object()
-            permission_obj = get_permission_obj(request.data.get("pid", ""))
-            if permission_obj is None:
-                ret["status"] = 1
-                ret["errmsg"] = "permission 不存在"
-            else:
-                groupobj.permissions.remove(permission_obj)
-            return response.Response(ret, status=status.HTTP_200_OK)
+        if request.user.has_perm("auth.change_group"):
+            group_obj = self.get_object()
+            power = request.data.get("power", [])
+            group_obj.permissions = power
+            return Response(status=status.HTTP_204_NO_CONTENT)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
         return response.Response(json.dumps(ret))

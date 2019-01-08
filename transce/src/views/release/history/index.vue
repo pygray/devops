@@ -83,7 +83,7 @@
       handleEdit(value) {
         this.currentValue = { ...value }
         this.dialogVisibleForEdit = true
-      },
+      }
 
     }
 

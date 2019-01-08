@@ -6,9 +6,8 @@ Vue.use(Router)
 import Login from '../views/login/'
 import Layout from '../views/layout/Layout'
 const Dashboard = () => import('@/views/dashboard/dashboard')
-const UserList = () => import('@/views/account/UserList')
-const GroupList = () => import('@/views/account/GroupList')
-const GroupPermissionList = () => import('@/views/account/GroupPermissionList')
+const UserList = () => import('@/views/account/user/index')
+const GroupList = () => import('@/views/account/group/index')
 
 /* cmdb */
 const Idc = () => import('@/views/cmdb/idc/index')
@@ -50,6 +49,7 @@ export const constantRouterMap = [
   {
     path: '/',
     component: Layout,
+    redirect: '/dashboard',
     icon: 'dashboard',
     children: [{
       path: '',
@@ -81,14 +81,14 @@ export const asyncRouterMap = [
         component: GroupList,
         name: '角色',
         meta: { title: '角色', icon: 'user', roles: ['auth.add_group'] }
-      },
-      {
-        path: 'group/groupPermission',
-        component: GroupPermissionList,
-        name: '权限列表',
-        meta: { title: '权限列表', icon: 'user', roles: ['auth.add_permission'] },
-        hidden: true
       }
+      // {
+      //   path: 'group/groupPermission',
+      //   component: GroupPermissionList,
+      //   name: '权限列表',
+      //   meta: { title: '权限列表', icon: 'user', roles: ['auth.add_permission'] },
+      //   hidden: true
+      // }
     ]
   },
   {

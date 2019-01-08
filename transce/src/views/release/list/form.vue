@@ -30,8 +30,6 @@
 </template>
 
 <script>
-
-
   export default {
     name: 'deploy-form',
     props: {
@@ -43,12 +41,11 @@
             info: '',
             version: '',
             detail: '',
-            status: '',
+            status: ''
           }
         }
       }
     },
-
     data() {
       return {
         rules: {
@@ -58,7 +55,6 @@
         }
       }
     },
-
     methods: {
       submitForm() {
         this.$refs.form.validate(valid => {

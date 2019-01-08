@@ -69,8 +69,7 @@
           ],
           reviewer: [
             { required: true, message: '请输入发布指派人', trigger: 'blur' }
-          ],
-
+          ]
         },
         sa_list: [],
         project_list: [],
@@ -78,7 +77,6 @@
         state: 0
       }
     },
-
     methods: {
       getTag(event) {
         console.log(event)
@@ -87,7 +85,6 @@
           this.tag_list = res
           console.log(this.tag_list)
         })
-
       },
       onSubmit() {
         this.$message('submit!')

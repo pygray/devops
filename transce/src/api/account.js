@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 用户列表
+// 获取用户列表
 export function getUserList(params) {
   return request({
     url: '/users/',
@@ -9,82 +9,103 @@ export function getUserList(params) {
   })
 }
 
-export function deleteUser(userid) {
+// 创建用户
+export function createUser(data) {
   return request({
-    url: '/users/' + userid + '/',
-    method: 'delete'
-  })
-}
-
-export function addUser(data) {
-  return request({
-    url: '/userreg/',
+    url: '/users/',
     method: 'post',
     data
   })
 }
-export function updateUser(userid, params) {
+
+// 修改用户
+export function updateUser(id, data) {
   return request({
-    url: '/users/' + userid + '/',
+    url: '/users/' + id + '/',
     method: 'put',
-    data: params
-  })
-}
-export function getUserGroupsList(uid, params) {
-  return request({
-    url: '/usergroups/' + uid + '/',
-    method: 'get',
-    params
+    data
   })
 }
 
-export function updateUserGroupsList(userid, params) {
+// 删除用户
+export function deleteUser(id) {
   return request({
-    url: '/usergroups/' + userid + '/',
-    method: 'put',
-    data: params
-  })
-}
-
-// 角色列表
-export function getGroupsList(params) {
-  return request({
-    url: '/groups/',
-    method: 'get',
-    params
-  })
-}
-export function addRole(params) {
-  return request({
-    url: '/groups/',
-    method: 'post',
-    data: params
-  })
-}
-
-export function getGroupPermissionsList(id, params) {
-  return request({
-    url: '/grouppermissions/' + id + '/',
-    method: 'get',
-    params
-  })
-}
-export function deleteGroup(gid) {
-  return request({
-    url: '/groups/' + gid + '/',
+    url: '/users/' + id + '/',
     method: 'delete'
   })
 }
 
-// 成员列表
-export function getGroupMembers(gid, params) {
+// 将用户加入组中
+export function updateUserGroup(id, data) {
   return request({
-    url: '/groupmembers/' + gid + '/',
+    url: '/usergroup/' + id + '/',
+    method: 'put',
+    data
+  })
+}
+
+// 获取组列表
+export function getGroupList(params) {
+  return request({
+    url: '/groups/',
     method: 'get',
     params
   })
 }
 
+// 获取某个组的成员
+export function getOneGroup(id) {
+  return request({
+    url: '/groups/' + id + '/',
+    method: 'get'
+  })
+}
+
+// 创建组
+export function createGroup(data) {
+  return request({
+    url: '/groups/',
+    method: 'post',
+    data
+  })
+}
+
+// 修改组
+export function updateGroup(id, data) {
+  return request({
+    url: '/groups/' + id + '/',
+    method: 'put',
+    data
+  })
+}
+
+// 删除组
+export function deleteGroup(id) {
+  return request({
+    url: '/groups/' + id + '/',
+    method: 'delete'
+  })
+}
+
+// 获取权限列表
+export function getPermissionList(params) {
+  return request({
+    url: '/permission/',
+    method: 'get',
+    params
+  })
+}
+
+// 修改角色权限
+export function updateGroupPower(id, data) {
+  return request({
+    url: '/grouppower/' + id + '/',
+    method: 'put',
+    data
+  })
+}
+
+// 将指定用户从组里面删除
 export function deleteGroupMember(gid, data) {
   return request({
     url: '/groupmembers/' + gid + '/',
@@ -93,36 +114,3 @@ export function deleteGroupMember(gid, data) {
   })
 }
 
-export function updateGroupPermissions(id, params) {
-  return request({
-    url: '/grouppermissions/' + id + '/',
-    method: 'put',
-    data: params
-  })
-}
-
-export function deleteGroupPermissions(id, params) {
-  return request({
-    url: '/grouppermissions/' + id + '/',
-    method: 'delete',
-    data: params
-  })
-}
-
-// 获取用户组的前端菜单
-export function getGroupMenuList(id, params) {
-  return request({
-    url: '/groupmenus/' + id + '/',
-    method: 'get',
-    params
-  })
-}
-
-// 给指定用户组增加新的前端菜单
-export function updateGroupMenu(id, params) {
-  return request({
-    url: '/groupmenus/' + id + '/',
-    method: 'put',
-    data: params
-  })
-}

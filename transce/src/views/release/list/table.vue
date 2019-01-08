@@ -97,14 +97,12 @@
         })
       },
       dateFormat: function(row, column) {
-        var date = row[column.property];
+        var date = row[column.property]
         if (date === undefined) {
           return ''
         }
-        return moment(date).format('YYYY-MM-DD HH:mm:ss');
+        return moment(date).format('YYYY-MM-DD HH:mm:ss')
       }
-
-
     }
   }
 </script>

@@ -84,6 +84,7 @@
       handleEdit(value) {
         const { id, ...params } = value
         const data = { 'status': 'Y' }
+        console.log(params)
         updateBatchTask(id, data).then(res => {
           this.$message({
             message: '执行成功',
