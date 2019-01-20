@@ -15,8 +15,8 @@ django.setup()
 
 from cmdb.models import *
 
-accessKey_id = "LTAI2J9pjbbGxJrg"
-accessKey_secret = "xoZlQiqVts8ABP065nE1vHiBQFhgSF"
+accessKey_id = ""
+accessKey_secret = ""
 zone = "cn-hangzhou"
 
 
