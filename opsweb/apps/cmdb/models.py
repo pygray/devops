@@ -29,26 +29,26 @@ class Idc(models.Model):
         permissions = (
             ("view_idc", "查看厂商"),
         )
-        db_table = "resource_idc"
+        db_table = "idc"
         ordering = ["id"]
 
 
-class Env(models.Model):
-    """
-    环境模型
-    """
-    name = models.CharField("环境名称", max_length=50, db_index=True, unique=True, help_text="环境名称")
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "环境"
-        db_table = "resource_env"
-        permissions = (
-            ("view_env", "查看环境"),
-        )
-        ordering = ["id"]
+# class Env(models.Model):
+#     """
+#     环境模型
+#     """
+#     name = models.CharField("环境名称", max_length=50, db_index=True, unique=True, help_text="环境名称")
+#
+#     def __str__(self):
+#         return self.name
+#
+#     class Meta:
+#         verbose_name = "环境"
+#         db_table = "resource_env"
+#         permissions = (
+#             ("view_env", "查看环境"),
+#         )
+#         ordering = ["id"]
 
 
 class Product(models.Model):
@@ -63,7 +63,7 @@ class Product(models.Model):
         return self.name
 
     class Meta:
-        db_table = 'resource_product'
+        db_table = 'product'
         verbose_name = "业务"
         permissions = (
             ("view_product", "查看业务线"),
@@ -75,50 +75,27 @@ class Server(models.Model):
     """
     服务器模型
     """
-    hostname = models.CharField("主机名", max_length=50, db_index=True, unique=True, help_text="主机名")
-    idc = models.ForeignKey(Idc, related_name="idc", verbose_name="主机对应的idc", help_text="主机对应IDC")
-    InstanceId = models.CharField("实例ID", max_length=150, default="null", db_index=True, help_text="实例ID")
-    ip = models.CharField("IP地址", max_length=100, default="null", db_index=True, help_text="IP地址")
-    cpu = models.CharField("cpu核数", max_length=10, help_text="cpu核数", default="null")
-    memory = models.CharField("内存", max_length=30, help_text="内存", default="null")
-    status = models.CharField("服务器状态", max_length=32, default="初始", db_index=True, help_text="服务器状态")
-    env = models.ForeignKey(Env, related_name="env", verbose_name="所属环境", null=True, help_text="所属环境")
+    hostname = models.CharField("主机名", max_length=50, db_index=True, null=True, help_text="主机名")
+    idc = models.ForeignKey(Idc, related_name="server_idc", verbose_name="主机对应的idc",null=True, help_text="主机对应IDC")
+    InstanceId = models.CharField("实例ID", max_length=150, null=True, db_index=True, help_text="实例ID")
+    ip = models.CharField("IP地址", max_length=100, db_index=True, help_text="IP地址")
+    cpu = models.CharField("cpu核数", max_length=10, help_text="cpu核数", null=True)
+    memory = models.CharField("内存", max_length=30, help_text="内存", null=True)
+    devices = models.CharField("磁盘", max_length=200, help_text="磁盘", null=True)
+    status = models.CharField("服务器状态", max_length=32, null=True, db_index=True, help_text="服务器状态")
     product = models.ForeignKey(Product, related_name="server_product", verbose_name="项目", null=True, help_text="所属项目")
     service = models.ForeignKey(Product, related_name="server_service", verbose_name="服务", null=True, help_text="所属服务")
-    os = models.CharField("系统", max_length=100, db_index=True, default="null", help_text="系统")
+    os = models.CharField("系统", max_length=100, db_index=True, null=True, help_text="系统")
     LastCheck = models.DateTimeField("检测时间", db_index=True, auto_now=True, help_text="检测时间")
-    remark = models.CharField("服务器备注", max_length=300, default="null", help_text="服务器备注")
+    remark = models.CharField("服务器备注", max_length=300, null=True, help_text="服务器备注")
 
     def __str__(self):
         return self.hostname
 
     class Meta:
         verbose_name = "服务器"
-        db_table = "resource_server"
+        db_table = "server"
         permissions = (
             ("view_server", "查看服务器"),
         )
         ordering = ["id"]
-#
-#
-# class Disk(models.Model):
-#     """
-#     磁盘模型
-#     """
-#     server = models.ForeignKey(Server, verbose_name="对应的server", help_text="所在server")
-#     InstanceId = models.CharField("服务器ID", max_length=100, null=True, help_text="服务器ID")
-#     disk = models.CharField("磁盘ID/name", max_length=100, null=True, help_text="磁盘ID/name")
-#     device = models.CharField("磁盘挂载路径", default="null", max_length=50, help_text="磁盘挂载路径")
-#     DiskSize = models.CharField("磁盘大小", max_length=50, help_text="磁盘大小")
-#     LastCheck = models.DateTimeField("检测时间", db_index=True, auto_now=True, help_text="检测时间")
-#     remark = models.CharField("磁盘备注", max_length=300, default="null", help_text="磁盘备注")
-#
-#     def __str__(self):
-#         return self.device
-#
-#     class Meta:
-#         verbose_name = "磁盘表"
-#         db_table = "disk"
-#         ordering = ["id"]
-#
-#

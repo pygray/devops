@@ -67,8 +67,8 @@
         label="操作"
         align="center">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleEdit(scope.row)">修改</el-button>
-          <el-button type="text" size="small" @click="handleDelete(scope.row)">下线</el-button>
+          <el-button type="primary" size="mini" @click="handleEdit(scope.row)">修改</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope.row)">下线</el-button>
         </template>
       </el-table-column>
     </el-table>

@@ -3,14 +3,12 @@ from django.http import Http404
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from django.contrib.auth import get_user_model
 from rest_framework.generics import get_object_or_404
-from django.db.models import Q
 from .filters import UserFilter, GroupFilter, PermissionFilter
 from django.contrib.auth.models import Group, Permission
 from .serializers import UserSerializer, UserRegSerializer, Groupserializer, PermissionSerializer
 from rest_framework import viewsets, mixins, permissions
 from rest_framework.response import Response
 
-from account.common import get_user_obj, get_permission_obj
 import json
 
 User = get_user_model()

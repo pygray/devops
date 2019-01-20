@@ -5,6 +5,8 @@ from rest_framework.authentication import TokenAuthentication,BasicAuthenticatio
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from .filter import deployFilter
 from scripts.jenkins_api import JenkinsApi
+from .tasks import code_preview_release
+
 
 
 from .serializers import DeploySerializer
@@ -46,6 +48,7 @@ class DeployViewset(viewsets.ModelViewSet):
 
         # 判断传来的status值判断是申请列表还是历史列表
         if status and int(status) <= 2:
+            print(status)
             queryset = queryset.filter(status__lte=2)
         elif status and int(status) > 2:
             queryset = queryset.filter(status__gte=2)
@@ -58,26 +61,51 @@ class DeployViewset(viewsets.ModelViewSet):
         return queryset
 
     def partial_update(self, request, *args, **kwargs):
-         pk = int(kwargs.get("pk"))
-         data = request.data
-         print(data)
-         if data['status'] == 3:
-             jenkins = JenkinsApi()
-             number = jenkins.get_next_build_number(data['name'])
-             jenkins.build_job(data['name'], parameters={'tag': data['version']})
-             sleep(30)
-             console_output = jenkins.get_build_console_output(data['name'], number)
-             data['console_output'] = console_output
-             print('2222')
-         Deploy.objects.filter(pk=pk).update(**data)
-         return Response(status=status.HTTP_204_NO_CONTENT)
+        '''
+        判断type 为 update 或 delete， 做具体操作
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
+        pk = int(kwargs.get("pk"))
+        data = request.data
+        types = data['type']
+        if types == 'update' and (data['status'] == 3 or data['status'] == 2):
+            '''
+                操作jenkins发布
+            '''
+            # jenkins = JenkinsApi()
+            # number = jenkins.get_next_build_number('test')
+            # jenkins.build_job('test', parameters={'tag': data['version']})
+            # sleep(30)
+            # console_output = jenkins.get_build_console_output('test', number)
+            # data['console_output'] = console_output
+            del data['type']
+            code_preview_release.delay(pk, data)
+            # Deploy.objects.filter(pk=pk).update(**data)
+        elif types == 'delete' and (data['status'] == 0 or data['status'] == 1):
+            del data['type']
+            data['status'] = 4
+            Deploy.objects.filter(pk=pk).update(**data)
+        elif type == 'delete' and (data['status'] == 2 or data['status'] == 3):
+            del data['type']
+            '''
+            操作jenkins取消发布
+            '''
+            jenkins = JenkinsApi()
+            Deploy.objects.filter(pk=pk).update(**data)
+        else:
+            del data['type']
+            Deploy.objects.filter(pk=pk).update(**data)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def update(self, request, *args, **kwargs):
          pk = int(kwargs.get("pk"))
          data = (request.data).dict()
-         print(data)
-         print(data['name'])
-         print(data['version'])
+         # print(data)
+         # print(data['name'])
+         # print(data['version'])
          jenkins = JenkinsApi()
          number = jenkins.get_next_build_number(data['name'])
          jenkins.build_job(data['name'], parameters={'tag': data['version']})

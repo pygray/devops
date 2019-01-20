@@ -12,7 +12,7 @@ export function getUserList(params) {
 // 创建用户
 export function createUser(data) {
   return request({
-    url: '/users/',
+    url: '/userreg/',
     method: 'post',
     data
   })

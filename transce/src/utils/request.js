@@ -19,7 +19,7 @@ service.interceptors.request.use(config => {
   return config
 }, error => {
   // Do something with request error
-  console.log(error) // for debug
+  // console.log(error) // for debug
   Promise.reject(error)
 })
 
@@ -50,7 +50,7 @@ service.interceptors.response.use(response => {
       }
     })
   } else if (error.response.status === 400) {
-    console.log(111)
+    // console.log(111)
     Message({
       type: 'error',
       message: '认证失效，请重新登陆'

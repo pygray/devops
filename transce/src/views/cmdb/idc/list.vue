@@ -35,8 +35,8 @@
         label="操作"
         align="center">
         <template slot-scope="scope">
-          <el-button v-if="hasPerm('cmdb.change_idc')" type="text" size="small" @click="handleEdit(scope.row)">修改</el-button>
-          <el-button type="text" size="small" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button v-if="hasPerm('cmdb.change_idc')" type="primary" size="mini" @click="handleEdit(scope.row)">修改</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

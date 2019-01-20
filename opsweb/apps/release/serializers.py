@@ -45,12 +45,12 @@ class DeploySerializer(serializers.ModelSerializer):
                                },
         return ret
 
-    # def create(self, validated_data):
-    #     # applicant = self.context['request'].user   #获取用户信息
-    #     print(validated_data)
-    #     instance = self.Meta.model.objects.create(**validated_data)
-    #     instance.save()
-    #     return instance
+    def create(self, validated_data):
+        # applicant = self.context['request'].user   #获取用户信息
+        print(validated_data)
+        instance = self.Meta.model.objects.create(**validated_data)
+        instance.save()
+        return instance
 
     # def update(self, instance, validated_data):
     #     print(validated_data)

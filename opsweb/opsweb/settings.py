@@ -54,11 +54,13 @@ INSTALLED_APPS = [
     'rest_framework_docs',
     'django_celery_beat',  # celery定时任务，需要clie
     'django_celery_results',  # 定时任务入库
+    'channels', # 支持 websocket
     'django_filters',
     'cmdb.apps.CmdbConfig',
     'account.apps.AccountConfig',
     'tasks.apps.TasksConfig',
     'release.apps.ReleaseConfig',
+    'projects.apps.ProjectsConfig'
 ]
 
 MIDDLEWARE = [
@@ -79,6 +81,19 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
     '*',
 )
+
+# channels 配置根路由指向通道
+ASGI_APPLICATION = 'opsweb.routing.application'
+
+#
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 ROOT_URLCONF = 'opsweb.urls'
 
@@ -197,12 +212,16 @@ JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7)
 }
 
-JENKINS = {
-    'JENKINS_URL': 'http://120.132.21.5:8080 ',
-    'JENKINS_TOKEN': 'c9595c464126adbb77752813c0606df1',
-    'JENKINS_USERNAME': 'admin',
-    'JENKINS_PASSWORD': 'awd0123!@#'
-}
+
+JENKINS_URL = 'http://120.132.21.5:8080'
+JENKINS_TOKEN = 'c9595c464126adbb77752813c0606df1'
+JENKINS_USERNAME = 'admin'
+JENKINS_PASSWORD = 'awd0123!@#'
+
+
+# gitlab
+GITLAB_HTTP_URI = 'http://120.132.2.223'
+GITLAB_TOKEN = 'tERi2r9hLPz7nkJmzPnc'
 
 # LOGGING = {
 #     'version': 1,

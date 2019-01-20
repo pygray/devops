@@ -53,10 +53,19 @@ export function getServerList(params) {
   })
 }
 
-// 更新服务器列表
+// 添加服务器
+export function createServer(data) {
+  return request({
+    url: '/server/',
+    method: 'post',
+    data
+  })
+}
+
+// 更新服务器
 export function updateServer(id, data) {
   return request({
-    url: '/server/' + id + '/',
+    url: '/server_update/' + id + '/',
     method: 'put',
     data
   })
@@ -117,24 +126,6 @@ export function deleteProductLevelInfo(id) {
 export function getProductServiceList(id, params) {
   return request({
     url: '/product_service/' + id + '/',
-    method: 'get',
-    params
-  })
-}
-
-// 返回项目列表
-export function getProductsList(params) {
-  return request({
-    url: '/product_exact/',
-    method: 'get',
-    params
-  })
-}
-
-// 返回服务列表
-export function getServicesList(params) {
-  return request({
-    url: '/service_exact/',
     method: 'get',
     params
   })

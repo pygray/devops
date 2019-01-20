@@ -40,6 +40,9 @@
       <el-form-item>
         <el-button type="primary" @click="searchClick()">搜索</el-button>
       </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="addClick" style="float:right">新增服务器</el-button>
+      </el-form-item>
     </el-form>
     <el-table
       v-loading="loading"
@@ -68,6 +71,9 @@
             </el-form-item>
             <el-form-item label="备注：">
               <span>{{ props.row.remark }}</span>
+            </el-form-item>
+            <el-form-item label="磁盘：">
+              <span v-for="device in props.row.devices">{{ device }}</span>
             </el-form-item>
           </el-form>
         </template>
@@ -112,11 +118,10 @@
       <el-table-column
         prop=""
         label="操作"
-        width="100"
         align="center">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="editClick(scope.row)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteClick(scope.row)">删除</el-button>
+          <el-button type="primary" size="mini" @click="editClick(scope.row)">修改</el-button>
+          <el-button type="danger" size="mini" @click="deleteClick(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -129,6 +134,18 @@
         :total="total_num">
       </el-pagination>
     </div>
+    <!-- 新增服务器 -->
+    <el-dialog title="新增服务器" :visible.sync="dialogVisibleForAddServer">
+      <el-form ref="addServerForm" :model="addServerForm" label-width="70px" :rules="addServerFormRules">
+        <el-form-item label="IP" prop="ip">
+          <el-input v-model="addServerForm.ip" placeholder="请输入IP地址"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleForAddServer = false">取 消</el-button>
+        <el-button type="primary" @click="submitAddServerClick">新 增</el-button>
+      </div>
+    </el-dialog>
 
     <!-- 修改服务器 -->
     <el-dialog title="修改服务器" :visible.sync="changeServerVisible">
@@ -192,7 +209,7 @@
   </div>
 </template>
 <script>
-  import { getServerList, deleteServer, getIdcsList, getIdcProductList, getProductServiceList, updateServer } from '@/api/cmdb'
+  import { getServerList, deleteServer, getIdcsList, getIdcProductList, getProductServiceList, updateServer, createServer } from '@/api/cmdb'
   export default {
     data() {
       return {
@@ -201,6 +218,7 @@
         total_num: 0,
         page: 1,
         state: 0,
+        dialogVisibleForAddServer: false,
         searchForm: {
           hostname: '',
           idc: '',
@@ -239,6 +257,24 @@
           ],
           service: [
             { required: true, trigger: 'change', message: '请选择服务' }
+          ]
+        },
+        addServerForm: {
+          product: null,
+          service: null,
+          hostname: '',
+          InstanceId: '',
+          ip: '',
+          cpu: '',
+          memory: '',
+          status: '',
+          os: '',
+          remark: '',
+          idc: null
+        },
+        addServerFormRules: {
+          ip: [
+            { required: true, trigger: 'blur', message: '请输入IP' }
           ]
         }
       }
@@ -307,6 +343,27 @@
       this.state = 1
     },
     methods: {
+      addClick() {
+        if (this.$refs['addServerForm'] !== undefined) {
+          this.$refs['addServerForm'].resetFields()
+        }
+        this.dialogVisibleForAddServer = true
+      },
+      submitAddServerClick() {
+        this.$refs['addServerForm'].validate((valid) => {
+          if (!valid) {
+            return
+          }
+          createServer(this.addServerForm).then(res => {
+            this.dialogVisibleForAddServer = false
+            this.fetchData(Object.assign(this.searchForm))
+            this.$message({
+              message: '创建服务器成功',
+              type: 'success'
+            })
+          })
+        })
+      },
       fetchData(params) {
         this.loading = true
         getServerList(params).then(res => {
@@ -362,7 +419,7 @@
         }).then(() => {
           deleteServer(row.id).then(() => {
             this.$message({
-              message: '删除业务线成功',
+              message: '删除服务器成功',
               type: 'success'
             })
             if (this.serverList.length === 1 && this.searchForm.page > 1) {

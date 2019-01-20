@@ -1,11 +1,14 @@
+
 from jenkins import Jenkins
-from opsweb.settings import JENKINS
+from opsweb.settings import JENKINS_URL, JENKINS_USERNAME, JENKINS_PASSWORD
+
+
 
 class JenkinsApi:
     def __init__(self):
-        self.url = JENKINS.JENKINS_URL
-        self.username = JENKINS.JENKINS_USERNAME
-        self.password = JENKINS.JENKINS_PASSWORD
+        self.url = JENKINS_URL
+        self.username = JENKINS_USERNAME
+        self.password = JENKINS_PASSWORD
         self.server = self.connect()
 
     def connect(self):

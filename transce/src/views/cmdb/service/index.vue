@@ -10,7 +10,7 @@
             </el-input>
           </el-col>
           <el-col :span="8" >
-            <el-button @click="addClick">添加</el-button>
+            <el-button type="primary" @click="addClick">添加</el-button>
           </el-col>
         </el-row>
         <div class="filter-tree">
@@ -103,7 +103,7 @@
           v-show="showServerListTable">
           <el-table-column
             prop="idc.name"
-            label="机房"
+            label="厂商"
             align="center">
           </el-table-column>
           <el-table-column
@@ -112,8 +112,8 @@
             align="center">
           </el-table-column>
           <el-table-column
-            prop="manage_ip"
-            label="管理IP"
+            prop="ip"
+            label="IP"
             align="center">
           </el-table-column>
           <el-table-column
@@ -122,7 +122,7 @@
             align="center">
           </el-table-column>
           <el-table-column
-            prop="last_check"
+            prop="LastCheck"
             label="LAST CHECK"
             align="center">
           </el-table-column>

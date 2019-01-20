@@ -15,6 +15,9 @@ class UserProfile(AbstractUser):
        verbose_name = "用户"
        permissions = (
            ("view_user", "查看用户"),
+           ("add_user", "添加用户"),
+           ("change_user", "修改用户"),
+           ("delete_user", "删除用户")
        )
        db_table = "user_profile"
        ordering = ["id"]

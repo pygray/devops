@@ -22,11 +22,11 @@
       title="添加"
       :visible.sync="dialogVisibleForAdd"
       width="50%">
-      <user-form
-        ref="userForm"
+      <user-create-form
+        ref="UserCreateForm"
         @submit="handleSubmitAdd"
         @cancel="handleCancelAdd">
-      </user-form>
+      </user-create-form>
     </el-dialog>
 
     <!--模态窗更新表单-->
@@ -73,10 +73,12 @@ import { getUserList, createUser, updateUser, deleteUser, updateUserGroup } from
 import UserList from './table'
 import UserForm from './form'
 import UserRole from './form_role'
+import UserCreateForm from './form_create'
 
 export default {
   name: 'user',
   components: {
+    UserCreateForm,
     UserList,
     UserForm,
     UserRole
@@ -134,7 +136,7 @@ export default {
     },
     handleCancelAdd() {
       this.dialogVisibleForAdd = false
-      this.$refs.userForm.$refs.form.resetFields() // 清除掉子组件表单的数据
+      this.$refs.UserCreateForm.$refs.form.resetFields() // 清除掉子组件表单的数据
     },
 
     /* 更新，弹出模态窗、提交数据、取消 */
@@ -145,7 +147,6 @@ export default {
     },
 
     handleSubmitEdit(value) {
-      console.log(value)
       const { id, ...params } = value // 很神奇，能把表单的值拆解成自己想要的样子
       // console.log(id)
       // console.log(params)

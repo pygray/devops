@@ -246,9 +246,28 @@ class ANSRunner(object):
 
 
 # if __name__ == '__main__':
+#     host_dict = {}
 #     rbt = ANSRunner()
 #     #rbt.run_playbook(playbook_path='/home/liuziping/restfuldemo/playbook/2018/08/playbook.yml')
 #     #result = json.dumps(rbt.get_playbook_result(),indent=4)
-#     rbt.run_model("128.1.40.70",'shell','uptime')
-#     result = json.dumps(rbt.get_model_result(), indent=4)
-#     print(result)
+#     ip = '10.23.18.183'
+#     ips = '10.23.18.183'.replace(".", "_")
+#     rbt.run_model(ip,'setup','')
+#     host_info = rbt.get_model_result()['success'][ips]['ansible_facts']
+#     host_dict['hostname'] = host_info['ansible_hostname']
+#     host_dict['cpu'] = host_info['ansible_processor_vcpus']
+#     host_dict['memory'] = host_info['ansible_memtotal_mb']
+#     os = host_info['ansible_distribution'] + ' ' + host_info['ansible_distribution_version']
+#     devices = host_info['ansible_devices']
+#     devices_list = [ { i: k['size'] } for i, k in devices.items()]
+#
+#     host_dict['os'] = os
+#     host_dict['devices'] = devices_list
+#
+#     print(host_dict)
+#
+#
+#
+#
+#     # result = json.dumps(rbt.get_model_result()['success'][ips]['ansible_facts']['ansible_hostname'], indent=4)
+#     # print(result)

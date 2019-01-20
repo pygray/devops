@@ -72,21 +72,6 @@ class IdcSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "address", "phone", "email", "letter")
 
 
-class EnvSerializer(serializers.ModelSerializer):
-    """
-    环境序列化
-    """
-    name = serializers.CharField(max_length=50, help_text="环境名称", label="环境名称",
-                                 error_messages={
-                                     "blank": "环境名称不能为空",
-                                     "required": "这个字段为必要字段"
-                                 })
-
-    class Meta:
-        model = Env
-        fields = "__all__"
-
-
 class ProductSerializer(serializers.ModelSerializer):
     """
     项目序服务列化
@@ -171,17 +156,26 @@ class ServerSerializer(serializers.ModelSerializer):
     """
     服务器模型
     """
+    hostname = serializers.CharField(required=False,  allow_blank=True)
+    InstanceId = serializers.CharField(required=False,  allow_blank=True)
+    cpu = serializers.CharField(required=False,  allow_blank=True)
+    ip = serializers.CharField(required=True)
+    memory = serializers.CharField(required=False, allow_blank=True)
+    os = serializers.CharField(required=False, allow_blank=True)
+    # idc = serializers.PrimaryKeyRelatedField()
+    remark = serializers.CharField(required=False, allow_blank=True)
+    status = serializers.CharField(required=False,  allow_blank=True)
     LastCheck = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True, help_text="检查时间")
-    product = serializers.PrimaryKeyRelatedField(many=False, queryset=Product.objects.filter(pid__exact=0), label="项目",
+    product = serializers.PrimaryKeyRelatedField(many=False, queryset=Product.objects.filter(pid__exact=0), label="项目", allow_null=True,
                                                  help_text="项目")
     service = serializers.PrimaryKeyRelatedField(many=False, queryset=Product.objects.exclude(pid__exact=0), label="服务",
-                                                 help_text="服务")
+                                                 allow_null=True, help_text="服务")
 
-    def validate_idc(self, value):
-        try:
-            return Idc.objects.get(name=value)
-        except Idc.DoesNotExist:
-            return self.create_idc(value)
+    # def validate_idc(self, value):
+    #     try:
+    #         return Idc.objects.get(name=value)
+    #     except Idc.DoesNotExist:
+    #         return self.create_idc(value)
 
     def validate(self, attrs):
         return attrs
@@ -194,10 +188,13 @@ class ServerSerializer(serializers.ModelSerializer):
         product_obj = instance.product
         service_obj = instance.service
         ret = super(ServerSerializer, self).to_representation(instance)
-        ret["idc"] = {
-            "id": idc_obj.id,
-            "name": idc_obj.name
-        }
+        if idc_obj:
+            ret["idc"] = {
+                "id": idc_obj.id,
+                "name": idc_obj.name
+            }
+        else:
+            ret["idc"] = {}
         if product_obj:
             ret["product"] = {
                 "id": product_obj.id,
@@ -216,14 +213,18 @@ class ServerSerializer(serializers.ModelSerializer):
             ret["remark"] = ""
         return ret
 
-    def update(self, instance, validated_data):
-        instance.status = validated_data.get("status", instance.status)
-        instance.product = validated_data.get("product", instance.product)
-        instance.service = validated_data.get("service", instance.service)
-        instance.idc = validated_data.get("idc", instance.idc)
-        instance.remark = validated_data.get("remark", instance.remark)
-        instance.save()
-        return instance
+    def create(self, validated_data):
+        return Server.objects.create(**validated_data)
+
+    # def update(self, instance, validated_data):
+    #     print(validated_data)
+    #     instance.status = validated_data.get("status", instance.status)
+    #     instance.product = validated_data.get("product", instance.product)
+    #     instance.service = validated_data.get("service", instance.service)
+    #     instance.idc = validated_data.get("idc", instance.idc)
+    #     instance.remark = validated_data.get("remark", instance.remark)
+    #     instance.save()
+    #     return instance
 
     def to_internal_value(self, data):
         """
@@ -243,6 +244,29 @@ class ServerSerializer(serializers.ModelSerializer):
         # vm_status_dict = {0: "虚拟机", 1: "物理机", 2: "宿主机"}
         fields = '__all__'
 
+class ServerUpdateSerializer(serializers.Serializer):
+    hostname = serializers.CharField(required=False)
+    remark = serializers.CharField(required=False, allow_blank=True)
+    status = serializers.CharField(required=False, allow_blank=True)
+    idc = serializers.PrimaryKeyRelatedField(many=False, queryset=Idc.objects.all(), label="厂商", allow_null=True, help_text="厂商")
+    product = serializers.PrimaryKeyRelatedField(many=False, queryset=Product.objects.filter(pid__exact=0), label="项目",
+                                                 allow_null=True,
+                                                 help_text="项目")
+    service = serializers.PrimaryKeyRelatedField(many=False, queryset=Product.objects.exclude(pid__exact=0), label="服务",
+                                                 allow_null=True, help_text="服务")
+
+    def update(self, instance, validated_data):
+        instance.status = validated_data.get("status", instance.status)
+        instance.product = validated_data.get("product", instance.product)
+        instance.service = validated_data.get("service", instance.service)
+        instance.idc = validated_data.get("idc", instance.idc)
+        instance.remark = validated_data.get("remark", instance.remark)
+        instance.save()
+        return instance
+
+    class Meta:
+        model = Server
+        fields = ("id", "idc", "hostname", "product", "service", "remark", "status")
 
 
 

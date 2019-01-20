@@ -1,23 +1,30 @@
 # Create your tasks here
 from __future__ import absolute_import, unicode_literals
-import json, traceback
+import json, traceback, os, django, sys
 from celery import shared_task
+project_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+sys.path.append(project_dir)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "opsweb.settings")
+django.setup()
 from scripts.ansible_api import ANSRunner
 from scripts.jenkins_api import JenkinsApi
+from .models import Deploy
 from time import sleep
 
-def code_release(deploy):
+
+@shared_task(name="preview_release")
+def code_preview_release(pk, deploy):
     """
     后台执行上线任务（后台jenkins构建任务）
     :param deploy: Deploy实例(申请上线会往数据库里插一条记录，传过来的就是这条记录）
     :return:
     """
     jenkins = JenkinsApi()
-    number = jenkins.get_next_build_number(deploy.name)
-    jenkins.build_job(deploy.name, parameters={'tag': deploy.version})
-    sleep(30)
-    console_output = jenkins.get_build_console_output(deploy.name, number)
-    deploy.console_output = console_output
-    deploy.save()
-    return '[{}] Project release completed.......'.format(deploy.name)
+    number = jenkins.get_next_build_number('test')
+    jenkins.build_job('test', parameters={'tag': deploy['version']})
+    sleep(15)
+    console_output = jenkins.get_build_console_output('test', number)
+    deploy['console_output'] = console_output
+    Deploy.objects.filter(pk=pk).update(**deploy)
+    return '[{}] Project release completed.......'.format('test')
 

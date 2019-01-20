@@ -21,7 +21,7 @@
       <el-steps :active="active" finish-status="success" simple style="margin-top: 20px">
         <el-step title="申请" ></el-step>
         <el-step title="审核" ></el-step>
-        <el-step title="灰度" ></el-step>
+        <el-step title="预发布" ></el-step>
         <el-step title="上线" ></el-step>
       </el-steps>
       <br>
@@ -82,7 +82,6 @@
         getDeployList(this.params).then(
           res => {
             this.release = res.results
-            console.log(this.release)
             this.totalNum = res.count
           })
       },
@@ -104,21 +103,23 @@
 
       handleSubmitEdit(value) {
         const { id, ...params } = value
-        console.log(params)
-        const formdata = { 'status': this.params.status + 1, 'name': params.name, version: params.version }
+        const formdata = { 'status': this.params.status + 1, 'name': params.name, version: params.version, 'type': 'update' }
+        console.log(formdata)
         updateDeploy(id, formdata).then(res => {
           this.$message({
             message: '更新成功',
             type: 'success'
           })
+          this.dialogVisibleForEdit = false
+          this.fetchData()
         })
-        this.dialogVisibleForEdit = false
-        this.fetchData()
       },
 
       /* 取消 */
-      handleDelete(id) {
-        const data = { 'status': 3 }
+      handleDelete(id, status) {
+        const status_id = status.id
+        const data = { 'status': status_id }
+        data['type'] = 'delete'
         updateDeploy(id, data).then(res => {
           this.$message({
             message: '取消成功',

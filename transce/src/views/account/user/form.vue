@@ -10,6 +10,10 @@
         <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
       </el-form-item>
 
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
+      </el-form-item>
+
       <el-form-item label="手机号" prop="phone">
         <el-input v-model="form.phone" placeholder="请输入手机号"></el-input>
       </el-form-item>
@@ -36,6 +40,7 @@ export default {
         return {
           username: '',
           name: '',
+          email: '',
           phone: ''
         }
       }
@@ -53,6 +58,9 @@ export default {
         ],
         phone: [
           { required: true, message: '请输入电话', trigger: 'blur' }
+        ],
+        email: [
+          { type: 'email', required: true, message: '请输入邮箱', trigger: 'blur' }
         ]
       },
       state: 0

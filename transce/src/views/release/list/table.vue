@@ -55,6 +55,12 @@
             type="primary"
             @click="handleEdit(scope.row)">处理</el-button>
 
+          <!--<el-button-->
+            <!--size="mini"-->
+            <!--type="info"-->
+            <!--v-show="scope.row.status.id === 2"-->
+            <!--@click="handleDetail(scope.row)">预发布详情</el-button>-->
+
           <el-button
             size="mini"
             type="danger"
@@ -78,17 +84,22 @@
       handleEdit(value) {
         this.$emit('edit', value)
       },
+      /* 预发布详情信息 */
+      handleDetail(value) {
+        this.$emit('detail', value)
+      },
 
       /* 删除 */
       handleDelete(deploy) {
         const id = deploy.id
-        const name = deploy.title
-        this.$confirm(`此操作将删除: ${name}, 是否继续?`, '提示', {
+        const status = deploy.status
+        const version = deploy.version
+        this.$confirm(`此操作将删除: ${version}, 是否继续?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$emit('delete', id)
+          this.$emit('delete', id, status)
         }).catch(() => {
           this.$message({
             type: 'info',

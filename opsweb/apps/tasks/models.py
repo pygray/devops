@@ -18,9 +18,12 @@ class TaskProfile(models.Model):
         return self.task_profile
 
     class Meta:
-        verbose_name = "task任务衍生表"
+        verbose_name = "定时任务"
         permissions = (
-            ("view_task_profile", "查看任务"),
+            ("view_task", "查看定时任务"),
+            ("add_task", "添加定时任务"),
+            ("change_task", "修改定时任务"),
+            ("delete_task", "删除定时任务"),
         )
         db_table = "task_profile"
         ordering = ["id"]
@@ -40,8 +43,12 @@ class BatchTasks(models.Model):
     class Meta:
         permissions = (
             ("view_batchTask", "查看批量任务"),
+            ("add_batchTask", "添加批量任务"),
+            ("change_batchTask", "修改批量任务"),
+            ("delete_batchTask", "删除批量任务")
         )
         verbose_name = '批量任务'
+        db_table = 'batchtask'
         verbose_name_plural = verbose_name
         ordering = ['-add_time']
 

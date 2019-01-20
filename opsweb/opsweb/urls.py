@@ -22,12 +22,14 @@ from cmdb.router import cmdb_router
 from account.router import account_router
 from tasks.router import task_router
 from release.router import deploy_router
+from projects.router import project_router
 
 router = DefaultRouter()
 router.registry.extend(account_router.registry)
 router.registry.extend(cmdb_router.registry)
 router.registry.extend(task_router.registry)
 router.registry.extend(deploy_router.registry)
+router.registry.extend(project_router.registry)
 
 urlpatterns = [
     url(r'^', include(router.urls)),

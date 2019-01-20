@@ -1,8 +1,10 @@
 from .serializers import *
 from rest_framework.response import Response
 from rest_framework import viewsets, response, status, mixins
+from rest_framework.permissions import IsAuthenticated
 from .filters import *
 from .models import *
+from .tasks import get_asset
 
 import json
 
@@ -106,7 +108,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             return super(ProductViewSet, self).list(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        return response.Response(ret)
 
     def retrieve(self, request, *args, **kwargs):
         ret = {}
@@ -114,7 +116,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             return super(ProductViewSet, self).retrieve(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        return response.Response(ret)
 
     def update(self, request, *args, **kwargs):
         ret = {}
@@ -122,7 +124,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             return super(ProductViewSet, self).update(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        return response.Response(ret)
 
     def destroy(self, request, *args, **kwargs):
         ret = {}
@@ -130,7 +132,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             return super(ProductViewSet, self).destroy(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        return response.Response(ret)
 
     def create(self, request, *args, **kwargs):
         ret = {}
@@ -138,7 +140,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             return super(ProductViewSet, self).create(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        return response.Response(ret)
 
 
 class ProductServiceViewSet(viewsets.GenericViewSet,
@@ -192,55 +194,28 @@ class IdcProductViewSet(mixins.RetrieveModelMixin,
             ret["errmsg"] = "此用户没有权限"
             return response.Response(json.dumps(ret))
 
-
-class ProductListViewSet(mixins.ListModelMixin,
-                         viewsets.GenericViewSet):
+class ServiceIPViewSet(viewsets.ViewSet):
     """
     list:
-        返回项目信息
+        返回服务和ip对应关系, 供 Ansible 发布调用
     """
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+    permission_classes = (IsAuthenticated, )
 
     def list(self, request, *args, **kwargs):
         ret = {}
-        if request.user.has_perm("cmdb.view_product"):
-            queryset = Product.objects.filter(pid__exact=0)
-            page = self.paginate_queryset(queryset)
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data)
+        if request.user.has_perm("cmdb.view_server"):
+            data = {}
+            service_obj = Product.objects.exclude(pid__exact=0)
+            for s in service_obj:
+                name = s.name
+                server = Server.objects.filter(service=s)
+                ip_list = [ se.ip for se in server ]
+                data[name] = ip_list
+            return Response(data)
         else:
             ret["status"] = 1
             ret["errmsg"] = "此用户没有权限"
-            return response.Response(json.dumps(ret))
-
-
-class ServiceListViewSet(mixins.ListModelMixin,
-                         viewsets.GenericViewSet):
-    """
-    list:
-        返回服务信息
-    """
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-    def list(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.view_product"):
-            queryset = Product.objects.exclude(pid__exact=0)
-            page = self.paginate_queryset(queryset)
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data)
-        else:
-            ret["status"] = 1
-            ret["errmsg"] = "此用户没有权限"
-            return response.Response(json.dumps(ret))
+            return response.Response(ret)
 
 
 class ServerViewSet(viewsets.ModelViewSet):
@@ -280,10 +255,19 @@ class ServerViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         ret = {}
         if request.user.has_perm("cmdb.add_server"):
-            return super(ServerViewSet, self).create(request, *args, **kwargs)
+            data = request.data
+            ip = data['ip']
+            serializer = self.get_serializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            # 异步获取资产信息
+            get_asset.delay(ip=ip)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            # return super(ServerViewSet, self).create(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        return response.Response(ret)
 
     def update(self, request, *args, **kwargs):
         ret = {}
@@ -291,7 +275,7 @@ class ServerViewSet(viewsets.ModelViewSet):
             return super(ServerViewSet, self).update(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        return response.Response(ret)
 
     def destroy(self, request, *args, **kwargs):
         ret = {}
@@ -299,7 +283,26 @@ class ServerViewSet(viewsets.ModelViewSet):
             return super(ServerViewSet, self).destroy(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        return response.Response(ret)
+
+class ServerUpdateViewSet(viewsets.ViewSet,
+                          mixins.UpdateModelMixin):
+    """
+    """
+    queryset = Server.objects.all()
+    serializer_class = ServerUpdateSerializer
+
+    def update(self, request, *args, **kwargs):
+        ret = {}
+        if request.user.has_perm("cmdb.change_server"):
+            pk = int(kwargs.get("pk"))
+            data = request.data
+            Server.objects.filter(pk=pk).update(**data)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        ret["status"] = 1
+        ret["errmsg"] = "此用户没有权限"
+        return response.Response(ret)
+
 
 
 class ServiceTreeViewSet(viewsets.ViewSet,
@@ -313,7 +316,7 @@ class ServiceTreeViewSet(viewsets.ViewSet,
             return response.Response(data)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        return response.Response(ret)
 
     def get_products(self):
         ret = []
@@ -336,83 +339,4 @@ class ServiceTreeViewSet(viewsets.ViewSet,
         node["pid"] = product_obj.pid
         return node
 
-
-
-
-
-
-
-
-
-#
-# class ProductViewset(viewsets.ModelViewSet):
-#     """
-#     retrieve:
-#         返回指定product信息
-#     list:
-#         返回product列表
-#     update:
-#         更新product信息
-#     destroy:
-#         删除product记录
-#     create:
-#         创建product记录
-#     partial_update:
-#         更新部分字段
-#     """
-#     queryset = Product.objects.all()
-#     serializer_class = ProductSerializer
-#
-#
-# class DiskViewset(viewsets.ModelViewSet):
-#     """
-#     create:
-#         创建disk信息
-#     update:
-#         修改disk信息
-#     destroy:
-#         删除disk信息
-#     retrieve:
-#         返回指定disk信息
-#     list:
-#         返回disk列表
-#     """
-#     queryset = Disk.objects.all()
-#     serializer_class = DiskSerializer
-#
-#
-# class IpViewset(viewsets.ModelViewSet):
-#     """
-#     create:
-#         创建IP信息
-#     update:
-#         修改IP信息
-#     destroy:
-#         删除IP信息
-#     retrieve:
-#         返回指定IP信息
-#     list:
-#         返回IP列表
-#     """
-#     queryset = IP.objects.all()
-#     serializer_class = IpSerializer
-#
-#
-# class ServerViewset(viewsets.ModelViewSet):
-#     """
-#     create:
-#         创建server信息
-#     update:
-#         修改server信息
-#     destroy:
-#         删除server信息
-#     retrieve:
-#         返回指定server信息
-#     list:
-#         返回server列表
-#     """
-#     queryset = Server.objects.all()
-#     serializer_class = ServerSerializer
-#     filter_class = ServerFilter
-#     filter_fields = ("keyword",)
 
