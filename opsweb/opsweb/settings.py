@@ -31,6 +31,11 @@ CELERYD_MAX_TASKS_PER_CHILD = 20  # 每个worker最多执行20个任务就会被
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
+# swagger login/out
+LOGIN_URL = 'rest_framework:login'
+LOGOUT_URL = 'rest_framework:logout'
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '3fmd##wdqcjrtp#g8$jzw&$pkrbs^+z%(+nx@2ahr4v3e-dg_3'
 
@@ -55,12 +60,15 @@ INSTALLED_APPS = [
     'django_celery_beat',  # celery定时任务，需要clie
     'django_celery_results',  # 定时任务入库
     'channels', # 支持 websocket
+    'rest_framework_swagger',  # swagger
     'django_filters',
     'cmdb.apps.CmdbConfig',
     'account.apps.AccountConfig',
     'tasks.apps.TasksConfig',
     'release.apps.ReleaseConfig',
-    'projects.apps.ProjectsConfig'
+    'projects.apps.ProjectsConfig',
+    'sqlmng.apps.SqlmngConfig',
+    'workflow.apps.WorkflowConfig'
 ]
 
 MIDDLEWARE = [
@@ -80,6 +88,30 @@ CORS_ORIGIN_ALLOW_ALL = True
 # 跨域允许所有域名
 CORS_ORIGIN_WHITELIST = (
     '*',
+)
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    'VIEW',
+)
+
+CORS_ALLOW_HEADERS = (
+    'XMLHttpRequest',
+    'X_FILENAME',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'Pragma',
 )
 
 # channels 配置根路由指向通道
@@ -182,6 +214,26 @@ MEDIA_URL = '/media/'
 # 指定上传目录
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# 邮件设置
+MAIL = {
+    'smtp_host': 'smtp.163.com',  # 邮件服务器
+    'smtp_port': 25,  # SMTP协议默认端口是25
+    'mail_user': 'sql_see@163.com',  # 邮件用户名
+    'mail_pass': 'see123',  # 授权码
+    'see_addr': 'http://xxx.xxx.xxx.xxx:81',  # see项目访问地址
+}
+
+# inception settings
+INCEPTION_SETTINGS = {
+    'file_path': '/etc/inc.cnf'
+}
+
+#optimize设置
+OPTIMIZE_SETTINGS = {
+    'sqladvisor_cli': '/usr/bin/sqladvisor',
+    'soar_cli': '/usr/local/SOAR/bin/soar'
+}
+
 REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
     # 默认全局分页
@@ -212,7 +264,7 @@ JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7)
 }
 
-
+# jenkins 配置
 JENKINS_URL = 'http://120.132.21.5:8080'
 JENKINS_TOKEN = 'c9595c464126adbb77752813c0606df1'
 JENKINS_USERNAME = 'admin'

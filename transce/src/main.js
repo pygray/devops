@@ -19,6 +19,10 @@ import '@/permission' // permission control
 import { hasPermission } from './utils/hasPermission'
 Vue.prototype.hasPerm = hasPermission
 
+// 定义全局变量
+import global_ from './utils/global/Global'
+Vue.prototype.GLOBAL = global_
+
 Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = true

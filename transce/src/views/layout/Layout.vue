@@ -49,6 +49,7 @@
   @import "src/styles/mixin.scss";
   .app-wrapper {
     @include clearfix;
+    background-color: #f6f6f6;
     position: relative;
     height: 100%;
     width: 100%;
@@ -58,7 +59,7 @@
     }
   }
   .drawer-bg {
-    background: #000;
+    background-color: white;
     opacity: 0.3;
     width: 100%;
     top: 0;

@@ -49,11 +49,10 @@ service.interceptors.response.use(response => {
         router.push({ path: '/dashboard' })
       }
     })
-  } else if (error.response.status === 400) {
-    // console.log(111)
+  } else if (error.response.data.non_field_errors) {
     Message({
       type: 'error',
-      message: '认证失效，请重新登陆'
+      message: '请提供有效的登录凭证.'
     })
   } else if (error.response.status === 500) {
     Message({

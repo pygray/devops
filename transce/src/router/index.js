@@ -28,6 +28,14 @@ const releaseApply = () => import('@/views/release/apply/index')
 const releaseList = () => import('@/views/release/list/index')
 const releaseHistory = () => import('@/views/release/history/index')
 
+/* sql 作业平台 */
+const sqlDbList = () => import('@/views/sqlmng/dbs/index')
+const checkSql = () => import('@/views/sqlmng/check/index')
+const personalSettings = () => import('@/views/sqlmng/settings/personalSettings')
+const dbCluster = () => import('@/views/sqlmng/dbs/cluster')
+const platformSettings = () => import('@/views/sqlmng/settings/platformSettings')
+const inceptionList = () => import('@/views/sqlmng/inception/inceptionList')
+
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -190,6 +198,51 @@ export const asyncRouterMap = [
         name: '上线列表',
         component: releaseHistory,
         meta: { title: '上线列表', icon: 'list', roles: ['release.view_deploy'] }
+      }
+    ]
+  },
+  {
+    path: '',
+    component: Layout,
+    // redirect: '/deploy/apply',
+    name: 'sql作业平台',
+    meta: { title: 'sql作业平台', icon: 'documentation', roles: [''] },
+    children: [
+      {
+        path: 'sql_check',
+        name: 'sql审核',
+        component: checkSql,
+        meta: { title: 'sql审核', icon: 'list', roles: [''] }
+      },
+      {
+        path: 'inception_list',
+        name: 'sql处理',
+        component: inceptionList,
+        meta: { title: 'sql处理', icon: 'list', roles: [''] }
+      },
+      {
+        path: 'personal_settings',
+        name: '订阅设置',
+        component: personalSettings,
+        meta: { title: '订阅设置', icon: 'list', roles: [''] }
+      },
+      {
+        path: 'platform_settings',
+        name: '流程设置',
+        component: platformSettings,
+        meta: { title: '流程设置', icon: 'list', roles: [''] }
+      },
+      {
+        path: 'db_cluster',
+        name: '集群',
+        component: dbCluster,
+        meta: { title: '集群', icon: 'list', roles: [''] }
+      },
+      {
+        path: 'dblist',
+        name: '数据库配置',
+        component: sqlDbList,
+        meta: { title: '数据库配置', icon: 'list', roles: [''] }
       }
     ]
   },

@@ -83,7 +83,7 @@ class DeployViewset(viewsets.ModelViewSet):
             # data['console_output'] = console_output
             del data['type']
             code_preview_release.delay(pk, data)
-            # Deploy.objects.filter(pk=pk).update(**data)
+            Deploy.objects.filter(pk=pk).update(**data)
         elif types == 'delete' and (data['status'] == 0 or data['status'] == 1):
             del data['type']
             data['status'] = 4
@@ -100,6 +100,7 @@ class DeployViewset(viewsets.ModelViewSet):
             Deploy.objects.filter(pk=pk).update(**data)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
     def update(self, request, *args, **kwargs):
          pk = int(kwargs.get("pk"))
          data = (request.data).dict()
@@ -115,3 +116,14 @@ class DeployViewset(viewsets.ModelViewSet):
          print(data)
          Deploy.objects.filter(pk=pk).update(**data)
          return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PreviewDeployListViewSet(viewsets.GenericViewSet,
+                                mixins.ListModelMixin):
+    """
+    list:
+        上线列表
+    """
+    queryset = Deploy.objects.filter(status__exact=3).order_by("-id")
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = DeploySerializer

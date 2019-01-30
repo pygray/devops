@@ -119,7 +119,7 @@ class GroupsViewSet(viewsets.ModelViewSet):
             return super(GroupsViewSet, self).list(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        return response.Response(ret)
 
     def update(self, request, *args, **kwargs):
         ret = {}
@@ -127,7 +127,7 @@ class GroupsViewSet(viewsets.ModelViewSet):
             return super(GroupsViewSet, self).update(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        return response.Response(ret)
 
     def retrieve(self, request, *args, **kwargs):
         ret = {}
@@ -135,7 +135,7 @@ class GroupsViewSet(viewsets.ModelViewSet):
             return super(GroupsViewSet, self).retrieve(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        return response.Response(ret)
 
     def destroy(self, request, *args, **kwargs):
         ret = {}
@@ -143,7 +143,7 @@ class GroupsViewSet(viewsets.ModelViewSet):
             return super(GroupsViewSet, self).destroy(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        return response.Response(ret)
 
     def create(self, request, *args, **kwargs):
         ret = {}
@@ -151,7 +151,7 @@ class GroupsViewSet(viewsets.ModelViewSet):
             return super(GroupsViewSet, self).create(request, *args, **kwargs)
         ret["status"] = 1
         ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        return response.Response(ret)
 
     def get_queryset(self):
         queryset = super(GroupsViewSet, self).get_queryset()

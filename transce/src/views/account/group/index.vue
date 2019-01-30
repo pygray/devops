@@ -218,6 +218,7 @@ export default {
         })
         this.params.page = 1
         this.fetchData()
+        this.dialogVisibleForMember = false
       },
       err => {
         console.log(err.message)
