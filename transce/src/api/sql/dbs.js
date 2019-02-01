@@ -33,7 +33,7 @@ export function DeleteDb(id) {
 
 export function CheckConn(data) {
   return request({
-    url: '/checkconnurl/',
+    url: '/inception/conncheck/',
     method: 'post',
     data: data
   })

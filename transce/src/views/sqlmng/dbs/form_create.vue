@@ -1,5 +1,5 @@
 <template>
-  <div class="db-form">
+  <div class="db-create-form">
     <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form">
 
       <el-form-item label="环境: ">
@@ -35,7 +35,7 @@
       </el-form-item>
 
       <el-form-item label="连接测试: " >
-        <el-button type="success" size="small" @click="updateCheckConn">连接</el-button>
+        <el-button type="success" size="small" @click="createCheckConn">连接</el-button>
       </el-form-item>
       <el-form-item>
         <div class="btn-wrapper">
@@ -50,7 +50,7 @@
 <script>
   import { CheckConn } from '@/api/sql/dbs'
   export default {
-    name: 'db-form',
+    name: 'db-create-form',
     props: {
       form: { // 接受父组件传递过来的值渲染表单
         type: Object,
@@ -91,12 +91,21 @@
       }
     },
     methods: {
-      updateCheckConn() {
-        const data = {
-          check_type: 'update_target_db',
-          id: this.form.id
-        }
-        this.handleCheckConn(data)
+      createCheckConn() {
+        this.$refs.form.validate((valid) => {
+          if (!valid) {
+            return
+          }
+          const data = {
+            check_type: 'create_target_db',
+            db: this.form.name,
+            host: this.form.host,
+            port: this.form.port,
+            user: this.form.user,
+            password: this.form.password
+          }
+          this.handleCheckConn(data)
+        })
       },
 
       handleCheckConn(data) {

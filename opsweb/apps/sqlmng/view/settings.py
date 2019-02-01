@@ -1,4 +1,5 @@
-from rest_framework.views import APIView
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
 from utils.baseviews import BaseView
@@ -97,19 +98,25 @@ class InceptionConnectionViewSet(BaseView):
     serializer_class = InceptionConnectionSerializer
     permission_classes = [IsSuperUser]
 
-class InceptionBackupView(HandleInceptionSettingsMixins, APIView):
+class InceptionBackupView(HandleInceptionSettingsMixins, viewsets.ViewSet):
     '''
         Inception备份信息
     '''
-    def get(self, request, *args, **kwargs):
+    permission_classes = (IsAuthenticated,)
+
+    def list(self, request, *args, **kwargs):
         ret = res.get_ret()
         ret['data'] = self.get_inception_backup()
         return Response(ret)
 
-class ConnectionCheckView(CheckConn, APIView):
+
+class ConnectionCheckView(viewsets.ViewSet, CheckConn):
     '''
         检查连接(Inception连接/Inception备份库/目标库)
     '''
-    def post(self, request, *args, **kwargs):
+    permission_classes = (IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        print(request)
         res = self.check(request)
         return Response(res)

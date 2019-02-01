@@ -19,11 +19,11 @@
       title="创建数据库配置"
       :visible.sync="dialogVisibleForAdd"
       width="50%">
-      <db-form
-        ref="DbForm"
+      <create-db-form
+        ref="createDbForm"
         @submit="handleSubmitAdd"
         @cancel="handleCancelAdd">
-      </db-form>
+      </create-db-form>
     </el-dialog>
   <!-- 修改 -->
     <el-dialog
@@ -54,9 +54,11 @@
   import { GetDbList, UpdateDb, CreateDb, DeleteDb } from '@/api/sql/dbs'
   import DbList from './list'
   import DbForm from './form'
+  import createDbForm from './form_create'
   export default {
     name: 'db',
     components: {
+      createDbForm,
       DbForm,
       DbList
     },
@@ -87,7 +89,6 @@
       handleCurrentChange(val) {
         this.params.page = val
         this.fetchData()
-        // console.log(this.params.page)
       },
       searchClick() {
         this.fetchData()
@@ -103,8 +104,8 @@
             message: '创建成功',
             type: 'success'
           })
-          this.handleCancelAdd()
           this.fetchData()
+          this.handleCancelAdd()
         })
       },
       handleCancelAdd() {

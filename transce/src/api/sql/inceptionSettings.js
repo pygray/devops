@@ -18,7 +18,7 @@ export function SetInceptionVariables(data) {
 
 export function CheckConn(data) {
   return request({
-    url: '/inception/connection/',
+    url: '/inception/conncheck/',
     method: 'post',
     data: data
   })
@@ -34,7 +34,7 @@ export function GetInceptionBackup(params) {
 
 export function GetInceptionConnection(params) {
   return request({
-    url: '/inception/conncheck/',
+    url: '/inception/connection/',
     method: 'get',
     params
   })

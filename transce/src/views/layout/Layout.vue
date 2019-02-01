@@ -49,7 +49,7 @@
   @import "src/styles/mixin.scss";
   .app-wrapper {
     @include clearfix;
-    background-color: #f6f6f6;
+    background-color: white;
     position: relative;
     height: 100%;
     width: 100%;

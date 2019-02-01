@@ -35,6 +35,9 @@ const personalSettings = () => import('@/views/sqlmng/settings/personalSettings'
 const dbCluster = () => import('@/views/sqlmng/dbs/cluster')
 const platformSettings = () => import('@/views/sqlmng/settings/platformSettings')
 const inceptionList = () => import('@/views/sqlmng/inception/inceptionList')
+const inceptionDetail = () => import('@/views/sqlmng/inception/inceptionDetail')
+const inceptionSettings = () => import('@/views/sqlmng/settings/inceptionSettings')
+const optimizeSQL = () => import('@/views/sqlmng/optimize/optimize')
 
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -202,36 +205,46 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '',
+    path: '/sql_check',
     component: Layout,
     // redirect: '/deploy/apply',
-    name: 'sql作业平台',
-    meta: { title: 'sql作业平台', icon: 'documentation', roles: [''] },
+    name: 'sql作业',
+    meta: { title: 'SQL作业', icon: 'documentation', roles: [''] },
     children: [
       {
         path: 'sql_check',
-        name: 'sql审核',
+        name: 'SQL审核',
         component: checkSql,
-        meta: { title: 'sql审核', icon: 'list', roles: [''] }
+        meta: { title: 'SQL审核', icon: 'list', roles: [''] }
       },
       {
         path: 'inception_list',
-        name: 'sql处理',
+        name: 'SQL处理',
         component: inceptionList,
-        meta: { title: 'sql处理', icon: 'list', roles: [''] }
+        meta: { title: 'SQL处理', icon: 'list', roles: [''] }
       },
       {
-        path: 'personal_settings',
-        name: '订阅设置',
-        component: personalSettings,
-        meta: { title: '订阅设置', icon: 'list', roles: [''] }
+        path: 'optimizeSQL',
+        name: 'SQL优化',
+        component: optimizeSQL,
+        meta: { title: 'SQL优化', icon: 'list', roles: [''] }
       },
       {
-        path: 'platform_settings',
-        name: '流程设置',
-        component: platformSettings,
-        meta: { title: '流程设置', icon: 'list', roles: [''] }
+        path: 'inceptionsql/:id',
+        name: 'SQL详情',
+        component: inceptionDetail,
+        hidden: true,
+        meta: { title: 'SQL详情', icon: 'list', roles: [''] }
       },
+    ]
+  },
+  {
+    path: '/db_cluster',
+    component: Layout,
+    // redirect: '/deploy/apply',
+    name: '数据库配置',
+    meta: { title: '数据库配置', icon: 'documentation', roles: [''] },
+    children: [
       {
         path: 'db_cluster',
         name: '集群',
@@ -240,9 +253,36 @@ export const asyncRouterMap = [
       },
       {
         path: 'dblist',
-        name: '数据库配置',
+        name: '数据库',
         component: sqlDbList,
-        meta: { title: '数据库配置', icon: 'list', roles: [''] }
+        meta: { title: '数据库', icon: 'list', roles: [''] }
+      }
+    ]
+  },
+  {
+    path: '/personal_settings',
+    component: Layout,
+    // redirect: '/deploy/apply',
+    name: 'SQL平台设置',
+    meta: { title: 'SQL平台设置', icon: 'documentation', roles: [''] },
+    children: [
+      {
+        path: 'personal_settings',
+        name: '订阅设置',
+        component: personalSettings,
+        meta: { title: '订阅设置', icon: 'list', roles: [''] }
+      },
+      {
+        path: 'inception_settings',
+        name: 'inception设置',
+        component: inceptionSettings,
+        meta: { title: 'inception设置', icon: 'list', roles: [''] }
+      },
+      {
+        path: 'platform_settings',
+        name: '流程设置',
+        component: platformSettings,
+        meta: { title: '流程设置', icon: 'list', roles: [''] }
       }
     ]
   },

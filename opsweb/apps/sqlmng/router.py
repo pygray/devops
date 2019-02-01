@@ -32,9 +32,12 @@ sql_router.register(r'dbcluster', DbClusterViewSet, base_name='DbClusterViewSet'
 sql_router.register(r'mailactions', MailActionsSettingsViewSet, base_name='MailActionsSettingsViewSet')
 sql_router.register(r'inception/variables', InceptionVariablesViewSet, base_name='InceptionVariablesViewSet')
 sql_router.register(r'inception/connection', InceptionConnectionViewSet, base_name='InceptionConnectionViewSet')
+sql_router.register(r'inception/backup', InceptionBackupView, base_name='InceptionBackupView')
+sql_router.register(r'inception/conncheck', ConnectionCheckView, base_name='ConnectionCheckView')
 
-urlpatterns = [
-    url(r'^', include(sql_router.urls)),
-    url(r'^inception/backup/$', InceptionBackupView.as_view()),
-    url(r'^inception/conncheck/$', ConnectionCheckView.as_view())
-]
+
+# urlpatterns = [
+#     url(r'^', include(sql_router.urls)),
+#     # url(r'^inception/backup/$', InceptionBackupView.as_view()),
+#     url(r'^inception/conncheck/$', ConnectionCheckView.as_view())
+# ]

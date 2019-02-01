@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'release.apps.ReleaseConfig',
     'projects.apps.ProjectsConfig',
     'sqlmng.apps.SqlmngConfig',
+    'medias.apps.MediasConfig',
     'workflow.apps.WorkflowConfig'
 ]
 
@@ -211,6 +212,11 @@ STATIC_URL = '/static/'
 
 # 指定上传访问地址
 MEDIA_URL = '/media/'
+
+MEDIA = {
+    'sql_file_path': 'files/download/sql/handle_result/'
+}
+
 # 指定上传目录
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

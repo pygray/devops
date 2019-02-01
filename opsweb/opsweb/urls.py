@@ -21,6 +21,7 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 from rest_framework.schemas import get_schema_view
 
+
 from rest_framework_jwt.views import obtain_jwt_token
 from cmdb.router import cmdb_router
 from account.router import account_router
@@ -28,6 +29,7 @@ from tasks.router import task_router
 from release.router import deploy_router
 from projects.router import project_router
 from sqlmng.router import sql_router
+from medias.router import media_router
 
 
 schema_view = get_schema_view(title='Users API', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
@@ -39,6 +41,7 @@ router.registry.extend(task_router.registry)
 router.registry.extend(deploy_router.registry)
 router.registry.extend(project_router.registry)
 router.registry.extend(sql_router.registry)
+router.registry.extend(media_router.registry)
 
 urlpatterns = [
     url(r'^api/docs/', schema_view),

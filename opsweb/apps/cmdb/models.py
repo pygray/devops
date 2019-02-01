@@ -63,7 +63,7 @@ class Product(models.Model):
         return self.name
 
     class Meta:
-        db_table = 'product'
+        db_table = 'products'
         verbose_name = "业务"
         permissions = (
             ("view_product", "查看业务线"),
@@ -94,7 +94,7 @@ class Server(models.Model):
 
     class Meta:
         verbose_name = "服务器"
-        db_table = "server"
+        db_table = "servers"
         permissions = (
             ("view_server", "查看服务器"),
         )

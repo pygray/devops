@@ -230,5 +230,5 @@ class ActionMixins(AppellationMixins):
             admin_mail = user.admin_mail
             mailto_users = [treater, commiter, admin_mail]
             mailto_users = list(set(mailto_users))
-            mailto_list = [u.email for u in User.objects.filter(username__in = mailto_users)]
+            mailto_list = [u.email for u in UserProfile.objects.filter(username__in = mailto_users)]
             send_mail.delay(mailto_list, user.username, sqlobj.id, sqlobj.remark, mail_type, sqlobj.sql_content, sqlobj.db.name)

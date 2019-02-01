@@ -2,29 +2,29 @@ export const dateOption = {
   shortcuts: [
     {
       text: '1 周',
-      value() {
+      onClick(picker) {
         const end = new Date()
         const start = new Date()
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-        return [start, end]
+        return picker.$emit('pick', [start, end])
       }
     },
     {
       text: '1 月',
-      value() {
+      onClick(picker) {
         const end = new Date()
         const start = new Date()
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-        return [start, end]
+        return picker.$emit('pick', [start, end])
       }
     },
     {
       text: '3 月',
-      value() {
+      onClick(picker) {
         const end = new Date()
         const start = new Date()
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-        return [start, end]
+        return picker.$emit('pick', [start, end])
       }
     }
   ]

@@ -6,9 +6,22 @@
         <el-button slot="append" icon="el-icon-search" size="small" @click="handleGetSqlList"></el-button>
       </el-input>
     </el-col>
-    <!--<el-col :span="8">-->
-    <!--<el-date-picker type="daterange" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>-->
-    <!--</el-col>-->
+    <!-- 日期搜索 -->
+    <el-col :span="4" :offset="1">
+      <div class="block" >
+        <el-date-picker
+          v-model="getParams.daterange"
+          type="datetimerange"
+          :picker-options="dateOption"
+          @change="dateChange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          align="right"
+          size="small">
+        </el-date-picker>
+      </div>
+    </el-col>
     <!--table-->
     <el-table
       :data="sqlList"
@@ -16,7 +29,7 @@
       <el-table-column
         label="ID">
         <template slot-scope="scope">
-          <router-link :to="'' + scope.row.id + '/'"><el-button type="text">{{ scope.row.id }}</el-button></router-link>
+          <router-link :to="'/inceptionsql/' + scope.row.id + '/'"><el-button type="text">{{ scope.row.id }}</el-button></router-link>
         </template>
       </el-table-column>
       <el-table-column
@@ -64,7 +77,7 @@
         label="工单状态">
         <template slot-scope="scope">
           <el-tag color="red" size="small" v-if="scope.row.status === -4"><font color="white">回滚失败</font></el-tag>
-          <el-tag size="small" v-if="scope.row.status === -3"><font color="white">已回滚</font></el-tag>
+          <el-tag size="small" color="mediumorchid" v-if="scope.row.status === -3"><font color="white">已回滚</font></el-tag>
           <el-tag size="small" v-if="scope.row.status === -2"><font color="white">已暂停</font></el-tag>
           <el-tag color="#3a8ee6" type="info" size="small" v-if="scope.row.status === -1" style=""><font color="white">待执行</font>
           </el-tag>
@@ -87,23 +100,25 @@
                 操作<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-show="scope.row.status === -1" @click.native="handleAction('execute', scope.row)">
-                  执行
-                </el-dropdown-item>
-                <el-dropdown-item v-show="scope.row.status === -1" @click.native="handleAction('reject', scope.row)">
-                  放弃
-                </el-dropdown-item>
-                <el-dropdown-item
-                  v-show="scope.row.status === -1 && (scope.row.is_manual_review === false || scope.row.handleable === true  || scope.row.status === -2)"
-                  @click.native="handleAction('approve', scope.row)">审核通过
-                </el-dropdown-item>
-                <el-dropdown-item
-                  v-show="scope.row.status === -1 && (scope.row.is_manual_review === false || scope.row.handleable === true  || scope.row.status === -2)"
-                  @click.native="handleAction('disapprove', scope.row)">审核驳回
-                </el-dropdown-item>
-                <el-dropdown-item v-show="scope.row.status === 0 && scope.row.type !== 'select'"
-                                  @click.native="handleAction('rollback', scope.row)">回滚
-                </el-dropdown-item>
+                <div v-if="scope.row.status === -1">
+                  <el-dropdown-item  @click.native="handleAction('execute', scope.row)">
+                    执行
+                  </el-dropdown-item>
+                  <el-dropdown-item  @click.native="handleAction('reject', scope.row)">
+                    放弃
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    v-if="scope.row.is_manual_review === false || scope.row.handleable || scope.row.status === -2"
+                    @click.native="handleAction('approve', scope.row)">审核通过
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    v-if="scope.row.is_manual_review === false || scope.row.handleable || scope.row.status === -2"
+                    @click.native="handleAction('disapprove', scope.row)">审核驳回
+                  </el-dropdown-item>
+                </div>
+                <div v-if="scope.row.status === 0 && scope.row.type !== 'select'">
+                  <el-dropdown-item @click.native="handleAction('rollback', scope.row)">回滚</el-dropdown-item>
+                </div>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -162,8 +177,8 @@
         </el-scrollbar>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="sqlContentModal = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="sqlContentModal = false" size="small">确 定</el-button>
+        <el-button @click="stepsModal = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="stepsModal = false" size="small">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -217,7 +232,7 @@
       }
     },
     created() {
-      this.handleGetSqlList()
+      this.handleGetSqlList(this.getParams)
     },
     methods: {
       handleGetStepsNum(steps) {
@@ -277,7 +292,6 @@
         this.spinShow = true
         GetSqlList(this.getParams)
           .then(response => {
-            console.log(response)
             this.spinShow = false
             this.sqlList = response.results
             this.total = response.count
@@ -287,10 +301,8 @@
         const id = params.id
         SqlAction(id, command)
           .then(response => {
-            console.log(response)
             const status = response.status
             const data = response.data
-            console.log(data)
             if (status === 0) {
               if (command === 'execute') {
                 this.alertSuccess('执行成功', id, data.execute_time, data.affected_rows)
@@ -312,24 +324,24 @@
         this.getParams.page = val
         this.handleGetSqlList()
       },
-      pageChange(page) {
-        this.getParams.page = page
-        this.handleGetSqlList()
-      },
-      sizeChange(size) {
-        this.getParams.pagesize = size
-        this.handleGetSqlList()
-      },
+      // pageChange(page) {
+      //   this.getParams.page = page
+      //   this.handleGetSqlList()
+      // },
+      // sizeChange(size) {
+      //   this.getParams.pagesize = size
+      //   this.handleGetSqlList()
+      // },
       dateChange(data) {
         console.log(data)
         if (data[0]) {
-          this.getParams.daterange = data[0] + ',' + addDate(data[1], 1)
+          this.getParams.daterange = addDate(data[0], 1) + ',' + addDate(data[1], 1)
           this.handleGetSqlList()
         }
-      },
-      dateClear(data) {
-        console.log(data)
       }
+      // dateClear(data) {
+      //   console.log(data)
+      // }
     }
   }
 </script>
@@ -344,5 +356,8 @@
     height: 100%;
     overflow: scroll;
     overflow-x: hidden;
+  }
+  .test {
+    color: mediumorchid;
   }
 </style>

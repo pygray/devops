@@ -40,7 +40,7 @@ class Inceptsql(Basemodel):
         (2, u'任务失败'),
     )
     ENVS = (
-        ('prd', u'生产环境'),
+        ('prod', u'生产环境'),
         ('ppe', u'预发布环境'),
         ('test', u'测试环境')
     )
@@ -85,7 +85,7 @@ class AuthRules(Basemodel):
         ('developer', u'研发'),
     )
     ENVS = (
-        ('prd', u'生产环境'),
+        ('prod', u'生产环境'),
         ('ppe', u'预发布环境'),
         ('test', u'测试环境')
     )
