@@ -11,12 +11,9 @@ class SqlFileView(DownloadBaseView):
 
     model = Inceptsql
 
-
-
     def get_content(self):
         pk = self.kwargs.get('pk')
         data_type = self.request.GET.get('data_type')
         instance = self.model.objects.get(pk=pk)
-        print(instance, data_type)
         content = getattr(instance, data_type)
         return content
