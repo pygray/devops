@@ -1,5 +1,6 @@
 <template>
   <div class="inception-list" style="padding: 10px;color: white">
+    <el-card shadow="always">
     <!--搜索-->
     <el-col :span="8" style="margin-bottom: 20px">
       <el-input placeholder="搜索" v-model="getParams.search" size="small" @keyup.enter.native="handleGetSqlList">
@@ -181,6 +182,7 @@
         <el-button type="primary" @click="stepsModal = false" size="small">确 定</el-button>
       </span>
     </el-dialog>
+    </el-card>
   </div>
 </template>
 

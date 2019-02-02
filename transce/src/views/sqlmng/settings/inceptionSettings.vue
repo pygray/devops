@@ -1,5 +1,6 @@
 <template>
   <div style="padding: 10px;">
+    <el-card shadow="always">
     <el-row>
       <el-col :span="8">
         <el-card>
@@ -91,6 +92,7 @@
         </el-card>
       </el-col>
     </el-row>
+    </el-card>
   </div>
 </template>
 

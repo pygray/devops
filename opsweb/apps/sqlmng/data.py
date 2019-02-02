@@ -2,7 +2,7 @@ auth_rules = [
 	{
 		'is_manual_review':True,
 		'role':'developer',
-		'env':'prd',
+		'env':'prod',
 		'reject':True,
 		'execute':False,
 		'rollback':False,
@@ -12,7 +12,7 @@ auth_rules = [
 	{
 		'is_manual_review':True,
 		'role':'developer_manager',
-		'env':'prd',
+		'env':'prod',
 		'reject':True,
 		'execute':False,
 		'rollback':False,
@@ -22,7 +22,7 @@ auth_rules = [
 	{
 		'is_manual_review':True,
 		'role':'developer_supremo',
-		'env':'prd',
+		'env':'prod',
 		'reject':True,
 		'execute':False,
 		'rollback':False,
@@ -32,7 +32,7 @@ auth_rules = [
 	{
 		'is_manual_review':True,
 		'role':'admin',
-		'env':'prd',
+		'env':'prod',
 		'reject':True,
 		'execute':True,
 		'rollback':True,
@@ -43,7 +43,7 @@ auth_rules = [
 	{
 		'is_manual_review':False,
 		'role':'developer',
-		'env':'prd',
+		'env':'prod',
 		'reject':True,
 		'execute':False,
 		'rollback':False,
@@ -53,7 +53,7 @@ auth_rules = [
 	{
 		'is_manual_review':False,
 		'role':'developer_manager',
-		'env':'prd',
+		'env':'prod',
 		'reject':True,
 		'execute':True,
 		'rollback':True,
@@ -63,7 +63,7 @@ auth_rules = [
 	{
 		'is_manual_review':False,
 		'role':'developer_supremo',
-		'env':'prd',
+		'env':'prod',
 		'reject':True,
 		'execute':True,
 		'rollback':True,
@@ -73,13 +73,97 @@ auth_rules = [
 	{
 		'is_manual_review':False,
 		'role':'admin',
-		'env':'prd',
+		'env':'prod',
 		'reject':True,
 		'execute':True,
 		'rollback':True,
 		'approve':False,
 		'disapprove':False
 	},
+
+
+	{
+		'is_manual_review':True,
+		'role':'developer',
+		'env':'ppe',
+		'reject':True,
+		'execute':True,
+		'rollback':True,
+		'approve':False,
+		'disapprove':False
+	},
+	{
+		'is_manual_review':True,
+		'role':'developer_manager',
+		'env':'ppe',
+		'reject':True,
+		'execute':True,
+		'rollback':True,
+		'approve':False,
+		'disapprove':False
+	},
+	{
+		'is_manual_review':True,
+		'role':'developer_supremo',
+		'env':'ppe',
+		'reject':True,
+		'execute':True,
+		'rollback':True,
+		'approve':False,
+		'disapprove':False
+	},
+	{
+		'is_manual_review':True,
+		'role':'admin',
+		'env':'ppe',
+		'reject':True,
+		'execute':True,
+		'rollback':True,
+		'approve':False,
+		'disapprove':False
+	},
+
+	{
+		'is_manual_review':False,
+		'role':'developer',
+		'env':'ppe',
+		'reject':True,
+		'execute':True,
+		'rollback':True,
+		'approve':False,
+		'disapprove':False
+	},
+	{
+		'is_manual_review':False,
+		'role':'developer_manager',
+		'env':'ppe',
+		'reject':True,
+		'execute':True,
+		'rollback':True,
+		'approve':False,
+		'disapprove':False
+	},
+	{
+		'is_manual_review':False,
+		'role':'developer_supremo',
+		'env':'ppe',
+		'reject':True,
+		'execute':True,
+		'rollback':True,
+		'approve':False,
+		'disapprove':False
+	},
+	{
+		'is_manual_review':False,
+		'role':'admin',
+		'env':'ppe',
+		'reject':True,
+		'execute':True,
+		'rollback':True,
+		'approve':False,
+		'disapprove':False
+	},
+
 
 	{
 		'is_manual_review':True,

@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div style="padding: 10px">
+    <el-card shadow="always">
     <el-form ref="searchForm" :model="searchForm" :inline="true">
       <el-form-item>
         <el-select v-model="searchForm.idc" style="width: 150px">
@@ -206,6 +207,7 @@
         <el-button type="primary" @click="submitChangeServerClick">确 定</el-button>
       </div>
     </el-dialog>
+    </el-card>
   </div>
 </template>
 <script>

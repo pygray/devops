@@ -29,7 +29,8 @@ class IsHandleAble(AppellationMixins, permissions.BasePermission):
         role = self.admin if user.is_superuser else user.role
         uri_list = request.META['PATH_INFO'].split('/')
         uri = uri_list[-2]
-        if (request.method in SAFE_METHODS and uri not in reject_perms + approve_perms + handle_perms) or env == self.env_test:
+        print(uri)
+        if (request.method in SAFE_METHODS and uri not in reject_perms + approve_perms + handle_perms) or env == self.env_test or request.user.is_superuser:
             return True
         if obj.is_manual_review == True:
             approve_step_instance = obj.workorder.step_set.all()[1]

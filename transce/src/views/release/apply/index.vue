@@ -1,5 +1,6 @@
 <template>
   <div class="apply">
+    <el-card shadow="always">
     <el-form :model="form" :rules="rules" ref="form" label-width="180px">
       <el-form-item label="选择项目：" prop="name">
         <el-select v-model="form.name" filterable placeholder="请选择项目" style="width: 60%;">
@@ -47,6 +48,7 @@
         <el-button @click="onCancel">退出</el-button>
       </el-form-item>
     </el-form>
+    </el-card>
   </div>
 </template>
 
@@ -177,6 +179,7 @@
     text-align: center;
   }
   .apply {
-    margin-top:2cm;
+    /*margin-top:2cm;*/
+    padding: 10px;
   }
 </style>

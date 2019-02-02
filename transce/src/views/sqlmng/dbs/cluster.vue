@@ -1,5 +1,6 @@
 <template>
   <div class="cluster" style="padding: 10px;">
+    <el-card shadow="always">
     <!--搜索-->
     <el-col :span="8" style="margin-bottom: 20px">
       <el-input placeholder="搜索" v-model="getClusterParams.search"  size="small"  @keyup.enter.native="searchClick">
@@ -148,7 +149,7 @@
       </el-table>
     </el-dialog>
 
-
+    </el-card>
   </div>
 </template>
 

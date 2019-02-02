@@ -1,8 +1,9 @@
 <template>
     <div class="crontabs">
+      <el-card shadow="always">
       <div>
         <div style="float: right;margin-bottom: 20px">
-          <el-button type="primary" @click="addClick">添加表达式</el-button>
+          <el-button type="primary" @click="addClick" size="small">添加表达式</el-button>
         </div>
       </div>
       <el-table
@@ -85,11 +86,11 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="editCrontabFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="submitEditClick">保 存</el-button>
+          <el-button @click="editCrontabFormVisible = false" size="small">取 消</el-button>
+          <el-button type="primary" @click="submitEditClick" size="small">保 存</el-button>
         </div>
       </el-dialog>
-
+      </el-card>
     </div>
 </template>
 
@@ -216,5 +217,7 @@
 </script>
 
 <style scoped>
-
+  .crontabs {
+    padding: 10px;
+  }
 </style>

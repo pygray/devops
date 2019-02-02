@@ -1,9 +1,10 @@
 <template>
   <div class="task-result-list">
+    <el-card shadow="always">
     <div>
       <el-col :span="8" style="margin-bottom: 20px">
-        <el-input placeholder="搜索" v-model="params.keywords" @keyup.enter.native="searchClick">
-          <el-button slot="append" icon="el-icon-search" @click="searchClick"></el-button>
+        <el-input size="small" placeholder="搜索" v-model="params.keywords" @keyup.enter.native="searchClick">
+          <el-button slot="append" icon="el-icon-search" @click="searchClick" size="small"></el-button>
         </el-input>
       </el-col>
     </div>
@@ -53,8 +54,8 @@
     </el-table>
     <div style="text-align: center">
       <div style="float: left">
-      <el-button @click="toggleSelection()">取消选择</el-button>
-      <el-button @click="toggleSelectionDelete">批量删除</el-button>
+      <el-button size="small" @click="toggleSelection()">取消选择</el-button>
+      <el-button size="small" @click="toggleSelectionDelete">批量删除</el-button>
       </div>
       <el-pagination
         background
@@ -64,7 +65,7 @@
         :total="task_result_total_num">
       </el-pagination>
     </div>
-
+    </el-card>
   </div>
 </template>
 
@@ -164,5 +165,7 @@
 </script>
 
 <style scoped>
-
+  .task-result-list {
+    padding: 10px;
+  }
 </style>

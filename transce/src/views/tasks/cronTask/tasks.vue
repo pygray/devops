@@ -1,13 +1,14 @@
 <template>
   <div class="task-list">
+    <el-card shadow="always">
     <div>
       <el-col :span="8" style="margin-bottom: 20px">
-        <el-input placeholder="搜索" v-model="params.keywords" @keyup.enter.native="searchClick">
-          <el-button slot="append" icon="el-icon-search" @click="searchClick"></el-button>
+        <el-input size="small" placeholder="搜索" v-model="params.keywords" @keyup.enter.native="searchClick">
+          <el-button size="small" slot="append" icon="el-icon-search" @click="searchClick"></el-button>
         </el-input>
       </el-col>
       <div style="float: right">
-        <el-button type="primary" @click="addClick">添加任务</el-button>
+        <el-button type="primary" @click="addClick" size="small">添加任务</el-button>
       </div>
     </div>
     <el-table
@@ -153,8 +154,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addTaskFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitAddClick">保 存</el-button>
+        <el-button @click="addTaskFormVisible = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="submitAddClick" size="small">保 存</el-button>
       </div>
     </el-dialog>
 
@@ -207,11 +208,11 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editTaskFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitEditClick">保 存</el-button>
+        <el-button @click="editTaskFormVisible = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="submitEditClick" size="small">保 存</el-button>
       </div>
     </el-dialog>
-
+    </el-card>
   </div>
 </template>
 
@@ -387,5 +388,8 @@
     margin-right: 0;
     margin-bottom: 0;
     width: 50%;
+  }
+  .task-list {
+    padding: 10px;
   }
 </style>

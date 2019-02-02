@@ -1,5 +1,6 @@
 <template>
   <div class="platformSettings">
+    <el-card shadow="always">
     <el-row :gutter="30">
       <el-col :span="12">
         <el-form label-width="100px">
@@ -91,7 +92,7 @@
         </div>
       </el-col>
     </el-row>
-
+    </el-card>
   </div>
 </template>
 
@@ -306,7 +307,7 @@
     margin-bottom: 20px;
   }
   .platformSettings {
-    padding: 20px;
+    padding: 10px;
     background-color: white;
   }
 </style>

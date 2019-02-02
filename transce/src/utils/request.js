@@ -44,10 +44,10 @@ service.interceptors.response.use(response => {
     Message({
       message: '权限拒绝',
       type: 'error',
-      duration: 1500,
-      onClose: function() {
-        router.push({ path: '/dashboard' })
-      }
+      duration: 1500
+      // onClose: function() {
+      //   router.push({ path: '/dashboard' })
+      // }
     })
   } else if (error.response.data.non_field_errors) {
     Message({

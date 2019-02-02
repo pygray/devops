@@ -11,8 +11,8 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="onSubmit($event)">创建</el-button>
-        <el-button @click="onCancel">退出</el-button>
+        <el-button size="small" type="primary" @click="onSubmit($event)">创建</el-button>
+        <el-button size="small" @click="onCancel">退出</el-button>
       </el-form-item>
     </el-form>
   </div>

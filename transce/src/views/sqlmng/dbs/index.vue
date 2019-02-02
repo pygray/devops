@@ -1,5 +1,6 @@
 <template>
   <div class="db">
+    <el-card shadow="always">
     <!--搜索-->
     <el-col :span="8" style="margin-bottom: 20px">
       <el-input placeholder="搜索" v-model="params.keywords" @keyup.enter.native="searchClick">
@@ -47,6 +48,7 @@
       @current-change="handleCurrentChange">
     </el-pagination>
   </div>
+    </el-card>
   </div>
 </template>
 

@@ -1,5 +1,6 @@
 <template>
-  <div class="idc">
+  <div class="idc" style="padding: 10px;">
+    <el-card shadow="always">
     <div>
       <el-col :span="8" style="margin-bottom: 20px">
         <el-input placeholder="搜索" v-model="params.keywords" @keyup.enter.native="searchClick">
@@ -55,6 +56,7 @@
         @cancel="handleCancelEdit">
       </idc-form>
     </el-dialog>
+    </el-card>
   </div>
 </template>
 

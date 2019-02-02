@@ -1,5 +1,6 @@
 <template>
   <div class="personalSettings">
+    <el-card shadow="always">
     <el-row :gutter="20">
     <el-form :label-position="labelPosition" label-width="150px">
       <el-col :span="12">
@@ -85,6 +86,7 @@
     </el-col>
     </el-form>
     </el-row>
+    </el-card>
   </div>
 
 </template>

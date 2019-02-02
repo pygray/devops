@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <div style="padding: 10px;background-color: white">
+  <div style="padding: 10px;">
+    <el-card shadow="always">
+    <div>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-alert title="输入要上线的SQL语句" type="warning" :closable="false" show-icon class="mar"></el-alert>
@@ -59,6 +60,7 @@
         </el-col>
       </el-row>
     </div>
+    </el-card>
   </div>
 </template>
 

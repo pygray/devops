@@ -1,5 +1,6 @@
 <template>
   <div class="user-list-container">
+    <el-card shadow="always">
     <el-row :gutter="24">
       <el-col :span="6" >
         <el-row :gutter="24">
@@ -138,6 +139,7 @@
         </div>
       </el-col>
     </el-row>
+    </el-card>
   </div>
 </template>
 
@@ -342,5 +344,8 @@
   }
   .select {
     width: 100%;
+  }
+  .user-list-container {
+    padding: 10px;
   }
 </style>

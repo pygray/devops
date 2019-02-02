@@ -1,5 +1,6 @@
 <template>
   <div class="release">
+    <el-card shadow="always">
     <div>
       <!--搜索-->
       <el-col :span="8" style="margin-bottom: 20px">
@@ -30,6 +31,7 @@
         @current-change="handleCurrentChange">
       </el-pagination>
     </center>
+    </el-card>
   </div>
 </template>
 
