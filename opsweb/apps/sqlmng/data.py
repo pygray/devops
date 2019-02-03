@@ -1,6 +1,16 @@
 auth_rules = [
 	{
 		'is_manual_review':True,
+		'role':'test',
+		'env':'prod',
+		'reject':True,
+		'execute':False,
+		'rollback':False,
+		'approve':False,
+		'disapprove':False
+	},
+	{
+		'is_manual_review':True,
 		'role':'developer',
 		'env':'prod',
 		'reject':True,
@@ -52,6 +62,16 @@ auth_rules = [
 	},
 	{
 		'is_manual_review':False,
+		'role':'test',
+		'env':'prod',
+		'reject':True,
+		'execute':False,
+		'rollback':False,
+		'approve':False,
+		'disapprove':False
+	},
+	{
+		'is_manual_review':False,
 		'role':'developer_manager',
 		'env':'prod',
 		'reject':True,
@@ -82,9 +102,21 @@ auth_rules = [
 	},
 
 
+
+
 	{
 		'is_manual_review':True,
 		'role':'developer',
+		'env':'ppe',
+		'reject':True,
+		'execute':True,
+		'rollback':True,
+		'approve':False,
+		'disapprove':False
+	},
+{
+		'is_manual_review':True,
+		'role':'test',
 		'env':'ppe',
 		'reject':True,
 		'execute':True,
@@ -135,6 +167,16 @@ auth_rules = [
 	},
 	{
 		'is_manual_review':False,
+		'role':'test',
+		'env':'ppe',
+		'reject':True,
+		'execute':True,
+		'rollback':True,
+		'approve':False,
+		'disapprove':False
+	},
+	{
+		'is_manual_review':False,
 		'role':'developer_manager',
 		'env':'ppe',
 		'reject':True,
@@ -164,6 +206,20 @@ auth_rules = [
 		'disapprove':False
 	},
 
+
+
+
+
+	{
+		'is_manual_review':True,
+		'role':'test',
+		'env':'test',
+		'reject':True,
+		'execute':True,
+		'rollback':True,
+		'approve':False,
+		'disapprove':False
+	},
 
 	{
 		'is_manual_review':True,
@@ -209,6 +265,16 @@ auth_rules = [
 	{
 		'is_manual_review':False,
 		'role':'developer',
+		'env':'test',
+		'reject':True,
+		'execute':True,
+		'rollback':True,
+		'approve':False,
+		'disapprove':False
+	},
+	{
+		'is_manual_review':False,
+		'role':'test',
 		'env':'test',
 		'reject':True,
 		'execute':True,
@@ -265,6 +331,11 @@ step_rules = {
             'commiter_true': [1, 2],
             'commiter_false': [2, 3]
         },
+	'test':
+		{
+			'commiter_true': [1],
+            'commiter_false': [1]
+		},
 	'admin':
         {
             'commiter_true': [1, 2],

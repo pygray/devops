@@ -114,3 +114,28 @@ export function deleteGroupMember(gid, data) {
   })
 }
 
+// 获取平台权限
+export function getRolePerm(params) {
+  return request({
+    url: '/authrules/',
+    method: 'get',
+    params
+  })
+}
+
+// 更新平台权限
+export function updateRolePerm(id, data) {
+  return request({
+    url: '/authrules/' + id + '/',
+    method: 'put',
+    data
+  })
+}
+
+// 删除平台角色
+export function deleteRolePerm(id) {
+  return request({
+    url: '/authrules/' + id + '/',
+    method: 'delete'
+  })
+}

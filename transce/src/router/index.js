@@ -8,6 +8,7 @@ import Layout from '../views/layout/Layout'
 const Dashboard = () => import('@/views/dashboard/dashboard')
 const UserList = () => import('@/views/account/user/index')
 const GroupList = () => import('@/views/account/group/index')
+const RoleList = () => import('@/views/account/roles/authRules')
 
 /* cmdb */
 const Idc = () => import('@/views/cmdb/idc/index')
@@ -90,8 +91,14 @@ export const asyncRouterMap = [
       {
         path: 'group',
         component: GroupList,
+        name: '用户组',
+        meta: { title: '用户组', icon: 'user', roles: ['auth.add_group'] }
+      },
+      {
+        path: 'roles',
+        component: RoleList,
         name: '角色',
-        meta: { title: '角色', icon: 'user', roles: ['auth.add_group'] }
+        meta: { title: '角色', icon: 'user', roles: [''] }
       }
       // {
       //   path: 'group/groupPermission',
@@ -150,9 +157,9 @@ export const asyncRouterMap = [
       },
       {
         path: 'history',
-        name: '历史任务',
+        name: 'celery历史任务',
         component: historyTask,
-        meta: { title: '历史任务', icon: 'list', roles: ['tasks.view_task_profile'] }
+        meta: { title: 'celery历史任务', icon: 'list', roles: ['tasks.view_task_profile'] }
       }
     ]
   },

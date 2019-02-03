@@ -107,6 +107,7 @@ class PersonalSerializer(AppellationMixins, serializers.ModelSerializer):
         ret['commiter'] = self.get_commiter(instance)
         return ret
 
+
 class AuthRulesSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -157,3 +158,4 @@ class MailActionsSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = MailActions
         fields = '__all__'
+

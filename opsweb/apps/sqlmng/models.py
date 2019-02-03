@@ -78,11 +78,13 @@ class SqlSettings(Basemodel):
     forbidden_words = models.TextField(null=True, blank=True, default='')
     sql_count_limit = models.IntegerField(null=True, blank=True, default=1000)
 
+
 class AuthRules(Basemodel):
     ROLES = (
         ('developer_supremo', u'总监'),
         ('developer_manager', u'经理'),
         ('developer', u'研发'),
+        ('test', u'测试'),
     )
     ENVS = (
         ('prod', u'生产环境'),

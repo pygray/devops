@@ -117,6 +117,5 @@ class ConnectionCheckView(viewsets.ViewSet, CheckConn):
     permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
-        print(request)
         res = self.check(request)
         return Response(res)
