@@ -3,12 +3,12 @@
     <el-card shadow="always">
     <div>
       <el-col :span="8" style="margin-bottom: 20px">
-        <el-input placeholder="搜索" v-model="params.search" @keyup.enter.native="searchClick">
+        <el-input placeholder="搜索" v-model="params.search" @keyup.enter.native="searchClick" size="small">
           <el-button slot="append" icon="el-icon-search" @click="searchClick"></el-button>
         </el-input>
       </el-col>
       <div class="add-idc-btn">
-        <el-button v-if="hasPerm('cmdb.add_idc')" type="primary" @click="addClick">新增厂商</el-button>
+        <el-button v-if="hasPerm('cmdb.add_idc')" type="primary" @click="addClick" size="small">新增厂商</el-button>
       </div>
     </div>
 

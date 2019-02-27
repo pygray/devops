@@ -1,6 +1,6 @@
 <template>
   <div class="db-form">
-    <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form">
+    <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form" size="small">
 
       <el-form-item label="环境: ">
         <el-select v-model="form.env" placeholder="请选择环境">

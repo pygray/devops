@@ -1,6 +1,6 @@
 <template>
   <div class="idc-form">
-    <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form">
+    <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form" size="small">
       <el-form-item label="名称" prop="name">
         <el-input v-model="form.name" placeholder="请输入名称"></el-input>
       </el-form-item>

@@ -4,7 +4,7 @@
       class="table"
       :data="idcValue"
       border
-    >
+      size="small">
       <el-table-column
         prop="name"
         label="厂商名称"

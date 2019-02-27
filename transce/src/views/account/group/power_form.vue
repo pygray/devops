@@ -1,6 +1,6 @@
 <template>
   <div class="role_power">
-    <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form">
+    <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form" size="small">
 
       <el-form-item label="组名" prop="name">
         <el-input v-model="form.name" readonly></el-input>

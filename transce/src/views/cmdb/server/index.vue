@@ -69,7 +69,8 @@
       :data="serverList"
       border
       class="table"
-      style="margin-bottom: 20px">
+      style="margin-bottom: 20px"
+      size="small">
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form  label-position="left" inline class="table-form-expand">

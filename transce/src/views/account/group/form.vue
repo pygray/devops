@@ -1,6 +1,6 @@
 <template>
   <div class="group-form">
-    <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form">
+    <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form" size="small">
 
       <el-form-item label="组名" prop="groupname">
         <el-input v-model="form.name" placeholder="请输入组名"></el-input>

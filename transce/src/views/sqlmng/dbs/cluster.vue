@@ -10,13 +10,14 @@
 
     <!--添加按钮-->
     <el-col :span="16" style="text-align: right">
-      <el-button type="primary" @click="handleAddModal">创建</el-button>
+      <el-button type="primary" @click="handleAddModal" size="small">创建</el-button>
     </el-col>
 
     <!--table-->
     <el-table
     :data="clusterList"
-    style="width: 100%">
+    style="width: 100%"
+    size="small">
       <el-table-column
         label="#"
         type="index">
@@ -66,7 +67,7 @@
       title="创建集群"
       :visible.sync="createModal"
       width="20%">
-      <el-form ref="createClusterForm" :model="createClusterForm" :rules="rules" label-width="80px">
+      <el-form ref="createClusterForm" :model="createClusterForm" :rules="rules" label-width="80px" size="small">
         <el-form-item label="集群名" prop="name">
           <el-input v-model="createClusterForm.name" placeholder="请输入集群名称"></el-input>
         </el-form-item>
@@ -120,7 +121,8 @@
       width="40%">
       <el-table
       :data="clusterDbList"
-      style="width: 100%">
+      style="width: 100%"
+      size="small">
         <el-table-column
           label="数据库名"
           prop="name">

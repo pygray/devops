@@ -24,7 +24,7 @@
         <el-col :span="12">
           <div>
           <el-alert title="选择执行条件" type="warning" :closable="false" show-icon class="mar"></el-alert>
-          <el-form ref="checkConf" :model="checkData" :rules="ruleCheckData" :label-position="labelPosition" label-width="100px">
+          <el-form ref="checkConf" :model="checkData" :rules="ruleCheckData" :label-position="labelPosition" label-width="100px" size="small">
             <el-form-item label="目标数据库 ">
               <el-cascader
                 size="small"

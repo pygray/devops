@@ -1,6 +1,6 @@
 <template>
   <div class="deploy-form">
-    <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form">
+    <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form" size="small">
 
       <el-form-item label="项目名称" prop="name">
         <el-input v-model="form.name" readonly></el-input>

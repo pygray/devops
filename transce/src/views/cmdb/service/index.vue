@@ -4,14 +4,14 @@
     <el-row :gutter="24">
       <el-col :span="6" >
         <el-row :gutter="24">
-          <el-col :span="16" >
+          <el-col :span="16">
             <el-input
               placeholder="输入关键字过滤"
               v-model="filterText">
             </el-input>
           </el-col>
-          <el-col :span="8" >
-            <el-button type="primary" @click="addClick">添加</el-button>
+          <el-col :span="8">
+            <el-button type="primary" @click="addClick" size="small">添加</el-button>
           </el-col>
         </el-row>
         <div class="filter-tree">
@@ -101,7 +101,8 @@
           element-loading-text="拼命加载中"
           :data="serverList"
           border
-          v-show="showServerListTable">
+          v-show="showServerListTable"
+          size="small">
           <el-table-column
             prop="idc.name"
             label="厂商"

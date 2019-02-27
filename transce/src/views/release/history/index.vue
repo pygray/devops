@@ -4,7 +4,7 @@
     <div>
       <!--搜索-->
       <el-col :span="8" style="margin-bottom: 20px">
-        <el-input placeholder="搜索" v-model="params.keywords" @keyup.enter.native="searchClick">
+        <el-input placeholder="搜索" v-model="params.keywords" @keyup.enter.native="searchClick" size="small">
           <el-button slot="append" icon="el-icon-search" @click="searchClick"></el-button>
         </el-input>
       </el-col>

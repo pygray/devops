@@ -4,14 +4,14 @@
     <div>
       <!--搜索-->
       <el-col :span="8" style="margin-bottom: 20px">
-        <el-input placeholder="搜索" v-model="params.search" @keyup.enter.native="searchClick">
+        <el-input placeholder="搜索" v-model="params.search" @keyup.enter.native="searchClick" size="small">
           <el-button slot="append" icon="el-icon-search" @click="searchClick"></el-button>
         </el-input>
       </el-col>
 
       <!--添加按钮-->
       <el-col :span="16" style="text-align: right">
-        <el-button type="primary" @click="handleAddBtn">创建组</el-button>
+        <el-button type="primary" @click="handleAddBtn" size="small">创建组</el-button>
       </el-col>
     </div>
 

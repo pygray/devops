@@ -1,6 +1,6 @@
 <template>
   <div class="user-role">
-    <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form">
+    <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form" size="small">
 
       <el-form-item label="用户名" prop="username">
         <el-input v-model="form.username" readonly></el-input>

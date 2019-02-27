@@ -1,7 +1,7 @@
 <template>
   <div class="apply">
     <el-card shadow="always">
-    <el-form :model="form" :rules="rules" ref="form" label-width="180px">
+    <el-form :model="form" :rules="rules" ref="form" label-width="180px" size="small">
       <el-form-item label="选择项目：" prop="name">
         <el-select v-model="form.name" filterable placeholder="请选择项目" style="width: 60%;">
           <el-option
