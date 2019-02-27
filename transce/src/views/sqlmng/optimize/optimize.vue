@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 15px">
+  <div style="padding: 10px">
       <el-row :gutter="20">
         <el-card shadow="always">
         <el-col :span="10">
@@ -30,15 +30,15 @@
                 <editor v-model="checkData.sql" @init="editorInit" @setCompletions="setCompletions"></editor>
               </el-form-item>
               <el-form-item label="操作: ">
-                <div v-if="optimizeType === 'SQLAdvisor'" style="margin-right: 20%">
+                <div v-if="optimizeType === 'SQLAdvisor'" style="margin-right: 10%">
                   <el-button type="primary" @click='handleSQLAdvisor' style="margin-right: 5%">查询</el-button>
                   <el-button @click="handleClear" style="margin-right: 10%">清空</el-button>
                 </div>
                 <div v-if="optimizeType==='SOAR'">
-                  <el-button type="primary" @click="SOARAllowOnline" style="margin-right: 5%">SQL评分</el-button>
-                  <el-button type="primary" @click="SOARBnlySyntax" style="margin-right: 5%">语法检查</el-button>
-                  <el-button type="primary" @click="SOARFingerPrint" style="margin-right: 5%">SQL指纹</el-button>
-                  <el-button type="primary" @click="SOARPretty" style="margin-right: 5%">SQL美化</el-button>
+                  <el-button type="primary" @click="SOARAllowOnline" style="margin-right: 1%">SQL评分</el-button>
+                  <el-button type="primary" @click="SOARBnlySyntax" style="margin-right: 1%">语法检查</el-button>
+                  <el-button type="primary" @click="SOARFingerPrint" style="margin-right: 1%">SQL指纹</el-button>
+                  <el-button type="primary" @click="SOARPretty" style="margin-right: 1%">SQL美化</el-button>
                 </div>
               </el-form-item>
             </el-form>

@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(BASE_DIR, "apps"))
 
 # Celery settings
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_BROKER_URL = 'redis://120.132.21.5:6379/0'
 CELERY_RESULT_BACKEND = 'django-db'  # 任务执行直接入库
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -131,7 +131,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [('120.132.21.5', 6379)],
         },
     },
 }
@@ -164,10 +164,10 @@ WSGI_APPLICATION = 'opsweb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'devops',
+        'NAME': 'devops_mac',
         'USER': 'root',
         'PASSWORD': 'qq4027721',
-        'HOST': '127.0.0.1',
+        'HOST': '120.132.21.5',
         'PORT': 3306,
         'OPTIONS': {
             'init_command': 'SET default_storage_engine=INNODB;',
@@ -260,11 +260,11 @@ REST_FRAMEWORK = {
     ),
 
     # 定义全局权限
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.DjangoModelPermissions',
-        # 'opsweb.permissions.Permissions',
-        # 'rest_framework.permissions.AllowAny',
-    ),
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.DjangoModelPermissions',
+    #     # 'opsweb.permissions.Permissions',
+    #     # 'rest_framework.permissions.AllowAny',
+    # ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # json web token 验证
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',

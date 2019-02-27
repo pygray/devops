@@ -1,13 +1,14 @@
 from sqlmng.models import Inceptsql
 from .mixins import DownloadBaseView
 
-
-
 # Create your views here.
+
+
 class SqlFileView(DownloadBaseView):
-    '''
+
+    """
         文件下载
-    '''
+    """
 
     model = Inceptsql
 

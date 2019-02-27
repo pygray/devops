@@ -40,4 +40,3 @@ sql_router.register(r'inception/conncheck', ConnectionCheckView, base_name='Conn
 #     url(r'^', include(sql_router.urls)),
 #     # url(r'^inception/backup/$', InceptionBackupView.as_view()),
 #     url(r'^inception/conncheck/$', ConnectionCheckView.as_view())
-# ]

@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework import filters
 
-class ReturnFormatMixin(object):
 
+class ReturnFormatMixin(object):
     @classmethod
     def get_ret(cls):
         return {'status': 0, 'msg': '', 'data': {}}

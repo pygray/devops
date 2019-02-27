@@ -4,7 +4,7 @@
     :data="value"
     border
     stripe
-    style="width: 100%">
+    style="width: 90%">
 
     <el-table-column
       label="#"

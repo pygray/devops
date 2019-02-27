@@ -1,15 +1,13 @@
 from rest_framework import viewsets, mixins, response, status
-from django.http import Http404
-from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
-from rest_framework.generics import get_object_or_404
-from .filters import UserFilter, GroupFilter, PermissionFilter
+from .filters import PermissionFilter
 from django.contrib.auth.models import Group, Permission
 from .serializers import UserSerializer, UserRegSerializer, Groupserializer, PermissionSerializer
 from rest_framework import viewsets, mixins, permissions
 from rest_framework.response import Response
-
-import json
+from utils.baseviews import BaseView
+from utils.permissions import IsSuperUser
 
 User = get_user_model()
 
@@ -31,7 +29,7 @@ class UserRegViewset(mixins.CreateModelMixin,
     serializer_class = UserRegSerializer
 
 
-class UsersViewSet(viewsets.ModelViewSet):
+class UsersViewSet(BaseView):
     """
     retrieve:
     获取用户信息
@@ -44,53 +42,12 @@ class UsersViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    filter_class = UserFilter
-    filter_fields = ("keywords", )
+    permission_classes = [IsSuperUser]
+    search_fields = ['username', 'email']
     # permission_classes = (IsAdminUser, )
     # extra_perms_map = {
     #     "GET": ["users.view_user"]
     # }
-
-    # 权限细化控制
-    def list(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("account.view_user"):
-            return super(UsersViewSet, self).list(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
-
-    def update(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("account.change_userprofile"):
-            return super(UsersViewSet, self).update(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
-
-    def retrieve(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("account.change_userprofile"):
-            return super(UsersViewSet, self).retrieve(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
-
-    def create(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("account.add_userprofile"):
-            return super(UsersViewSet, self).create(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
-
-    def destroy(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("account.delete_userprofile"):
-            return super(UsersViewSet, self).destroy(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
 
     def get_queryset(self):
         queryset = super(UsersViewSet, self).get_queryset()
@@ -99,7 +56,7 @@ class UsersViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class GroupsViewSet(viewsets.ModelViewSet):
+class GroupsViewSet(BaseView):
     """
     list:
     返回用户组（角色）列表
@@ -108,55 +65,14 @@ class GroupsViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = Groupserializer
-    filter_class = GroupFilter
-    filter_fields = ("keywords",)
-    # permission_classes = (IsAdminUser,)
-
-    # 权限细化控制
-    def list(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("account.view_user"):
-            return super(GroupsViewSet, self).list(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
-
-    def update(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("auth.change_group"):
-            return super(GroupsViewSet, self).update(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
-
-    def retrieve(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("auth.change_group"):
-            return super(GroupsViewSet, self).retrieve(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
-
-    def destroy(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("auth.delete_group"):
-            return super(GroupsViewSet, self).destroy(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
-
-    def create(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("auth.create_group"):
-            return super(GroupsViewSet, self).create(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
+    permission_classes = [IsSuperUser]
+    search_fields = ['name']
 
     def get_queryset(self):
         queryset = super(GroupsViewSet, self).get_queryset()
         queryset = queryset.order_by("id")
         return queryset
+
 
 class UserGroupsViewSet(mixins.UpdateModelMixin,
                         viewsets.GenericViewSet):
@@ -165,22 +81,16 @@ class UserGroupsViewSet(mixins.UpdateModelMixin,
     update:
     修改指定用户的角色
     """
-    permission_classes = (permissions.IsAuthenticated,)
-
+    permission_classes = [IsSuperUser]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
     # 重写update方法，只针对用户和组进行单独的处理，类似的场景还有修改密码，更改状态等
     def update(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("auth.change_user"):
-            user_obj = self.get_object()
-            roles = request.data.get("role", [])
-            user_obj.groups = roles
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        user_obj = self.get_object()
+        roles = request.data.get("role", [])
+        user_obj.groups = roles
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class GroupMembersViewSet(mixins.DestroyModelMixin,
@@ -189,21 +99,16 @@ class GroupMembersViewSet(mixins.DestroyModelMixin,
     destroy:
     从指定组里删除指定成员
     """
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = [IsSuperUser]
 
     queryset = Group.objects.all()
     serializer_class = Groupserializer
 
     def destroy(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("auth.delete_group"):
-            group_obj = self.get_object()
-            uid = request.data.get('uid', 0)
-            group_obj.user_set.remove(int(uid))
-            return Response(status=status.HTTP_200_OK)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        group_obj = self.get_object()
+        uid = request.data.get('uid', 0)
+        group_obj.user_set.remove(int(uid))
+        return Response(status=status.HTTP_200_OK)
 
 
 class PermissionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -213,18 +118,10 @@ class PermissionViewSet(viewsets.ReadOnlyModelViewSet):
     返回permission列表
     """
     queryset = Permission.objects.all()
+    permission_classes = [IsSuperUser]
     serializer_class = PermissionSerializer
     filter_class = PermissionFilter
     filter_fields = ("keywords",)
-
-    def list(self, request, *args, **kwargs):
-        ret = {}
-        # if request.user.has_perm("account.view_permission"):
-        if request.user.has_perm("account.view_user)"):
-            return super(PermissionViewSet, self).list(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
 
     def get_queryset(self):
         queryset = super(PermissionViewSet, self).get_queryset()
@@ -239,21 +136,15 @@ class GroupsPermViewSet(mixins.UpdateModelMixin,
     update:
     修改指定角色的权限
     """
-    permission_classes = (permissions.IsAuthenticated,)
-
+    permission_classes = [IsSuperUser]
     queryset = Group.objects.all()
     serializer_class = Groupserializer
 
     def update(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("auth.change_group"):
-            group_obj = self.get_object()
-            power = request.data.get("power", [])
-            group_obj.permissions = power
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+        group_obj = self.get_object()
+        power = request.data.get("power", [])
+        group_obj.permissions = power
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class DashboardViewset(viewsets.ViewSet):

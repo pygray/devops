@@ -1,17 +1,19 @@
 from .serializers import *
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework import viewsets, response, status, mixins
-from rest_framework.permissions import IsAuthenticated
-from .filters import *
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import FileUploadParser
+from pyexcel_xlsx import get_data
 from .models import *
 from .tasks import get_asset
-
-import json
+from utils.baseviews import BaseView
 
 
 # Create your views here.
 
-class IdcViewSet(viewsets.ModelViewSet):
+class IdcViewSet(BaseView):
     """
     retrieve:
         返回指定厂商信息
@@ -28,60 +30,21 @@ class IdcViewSet(viewsets.ModelViewSet):
     """
     queryset = Idc.objects.all()
     serializer_class = IdcSerializer
-    filter_class = IdcFilter
-    filter_fields = ("keywords",)
-
-    def list(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.view_idc"):
-            return super(IdcViewSet, self).list(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
-
-    def retrieve(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.view_idc"):
-            return super(IdcViewSet, self).retrieve(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
-
-    def update(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.change_idc"):
-            return super(IdcViewSet, self).update(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
+    search_fields = ['name', 'letter', 'email']
 
     def destroy(self, request, *args, **kwargs):
         ret = {"status": 0}
-        if request.user.has_perm("cmdb.delete_idc"):
-            instance = self.get_object()
-
-            if Server.objects.filter(idc_id__exact=instance.id).count() != 0:
-                ret["status"] = 1
-                ret["errmsg"] = "该IDC还有server记录，不能删除"
-                return response.Response(ret, status=status.HTTP_200_OK)
-
-            self.perform_destroy(instance)
-            return response.Response(ret, status=status.HTTP_200_OK)
-        else:
+        instance = self.get_object()
+        if Server.objects.filter(idc_id__exact=instance.id).count() != 0:
             ret["status"] = 1
-            ret["errmsg"] = "此用户没有权限"
-            return response.Response(json.dumps(ret))
-
-    def create(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.add_idc"):
-            return super(IdcViewSet, self).create(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+            ret["errmsg"] = "该IDC还有server记录，不能删除"
+            return response.Response(ret, status=status.HTTP_200_OK)
+        self.perform_destroy(instance)
+        return response.Response(ret, status=status.HTTP_200_OK)
 
 
-class ProductViewSet(viewsets.ModelViewSet):
+class ProductViewSet(BaseView):
     """
     retrieve:
         返回指定项目信息
@@ -98,49 +61,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
-    filter_class = ProductFilter
-    filter_fields = ("pid", )
-
-    def list(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.view_product"):
-            return super(ProductViewSet, self).list(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
-
-    def retrieve(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.view_product"):
-            return super(ProductViewSet, self).retrieve(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
-
-    def update(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.change_product"):
-            return super(ProductViewSet, self).update(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
-
-    def destroy(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.delete_product"):
-            return super(ProductViewSet, self).destroy(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
-
-    def create(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.add_product"):
-            return super(ProductViewSet, self).create(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
+    search_fields = ['pid']
 
 
 class ProductServiceViewSet(viewsets.GenericViewSet,
@@ -148,25 +70,20 @@ class ProductServiceViewSet(viewsets.GenericViewSet,
     """返回指定项目服务"""
 
     queryset = Product.objects.all()
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
     serializer_class = ProductSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.view_product"):
-            product_obj = self.get_object()
-            # pid = product_obj.pid
-            ids = product_obj.id
-            queryset = Product.objects.filter(pid__exact=ids)
-            page = self.paginate_queryset(queryset)
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data)
-        else:
-            ret["status"] = 1
-            ret["errmsg"] = "此用户没有权限"
-            return response.Response(json.dumps(ret))
+        product_obj = self.get_object()
+        # pid = product_obj.pid
+        ids = product_obj.id
+        queryset = Product.objects.filter(pid__exact=ids)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class IdcProductViewSet(mixins.RetrieveModelMixin,
@@ -176,23 +93,19 @@ class IdcProductViewSet(mixins.RetrieveModelMixin,
         返回指定厂商下项目信息
     """
     queryset = Idc.objects.all()
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
     serializer_class = ProductSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.view_idc"):
-            idc_obj = self.get_object()
-            queryset = idc_obj.product_idc.filter(pid__exact=0)
-            page = self.paginate_queryset(queryset)
-            if page is not None:
-                serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(serializer.data)
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data)
-        else:
-            ret["status"] = 1
-            ret["errmsg"] = "此用户没有权限"
-            return response.Response(json.dumps(ret))
+        idc_obj = self.get_object()
+        queryset = idc_obj.product_idc.filter(pid__exact=0)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 class ServiceIPViewSet(viewsets.ViewSet):
     """
@@ -202,23 +115,17 @@ class ServiceIPViewSet(viewsets.ViewSet):
     permission_classes = (IsAuthenticated, )
 
     def list(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.view_server"):
-            data = {}
-            service_obj = Product.objects.exclude(pid__exact=0)
-            for s in service_obj:
-                name = s.name
-                server = Server.objects.filter(service=s)
-                ip_list = [ se.ip for se in server ]
-                data[name] = ip_list
-            return Response(data)
-        else:
-            ret["status"] = 1
-            ret["errmsg"] = "此用户没有权限"
-            return response.Response(ret)
+        data = {}
+        service_obj = Product.objects.exclude(pid__exact=0)
+        for s in service_obj:
+            name = s.name
+            server = Server.objects.filter(service=s)
+            ip_list = [se.ip for se in server]
+            data[name] = ip_list
+        return Response(data)
 
 
-class ServerViewSet(viewsets.ModelViewSet):
+class ServerViewSet(BaseView):
     """
     create:
         创建server信息
@@ -233,90 +140,44 @@ class ServerViewSet(viewsets.ModelViewSet):
     """
     queryset = Server.objects.all()
     serializer_class = ServerSerializer
-    filter_class = ServerFilter
-    filter_fields = ("keywords", "idc", "product", "service", )
-
-    def list(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.view_server"):
-            return super(ServerViewSet, self).list(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
-
-    def retrieve(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.view_server"):
-            return super(ServerViewSet, self).retrieve(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(json.dumps(ret))
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
+    search_fields = ["idc", "product", "service", "hostname", "ip"]
 
     def create(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.add_server"):
-            data = request.data
-            ip = data['ip']
-            serializer = self.get_serializer(data=data)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            # 异步获取资产信息
-            get_asset.delay(ip=ip)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-            # return super(ServerViewSet, self).create(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
+        data = request.data
+        ip = data['ip']
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        # 异步获取资产信息
+        get_asset.delay(ip=ip)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-    def update(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.change_server"):
-            return super(ServerViewSet, self).update(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
-
-    def destroy(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.delete_server"):
-            return super(ServerViewSet, self).destroy(request, *args, **kwargs)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
 
 class ServerUpdateViewSet(viewsets.ViewSet,
                           mixins.UpdateModelMixin):
     """
     """
     queryset = Server.objects.all()
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
     serializer_class = ServerUpdateSerializer
 
     def update(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.change_server"):
-            pk = int(kwargs.get("pk"))
-            data = request.data
-            Server.objects.filter(pk=pk).update(**data)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
-
+        pk = int(kwargs.get("pk"))
+        data = request.data
+        Server.objects.filter(pk=pk).update(**data)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ServiceTreeViewSet(viewsets.ViewSet,
                          mixins.ListModelMixin):
     queryset = Product.objects.all()
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
 
     def list(self, request, *args, **kwargs):
-        ret = {}
-        if request.user.has_perm("cmdb.view_product"):
             data = self.get_products()
             return response.Response(data)
-        ret["status"] = 1
-        ret["errmsg"] = "此用户没有权限"
-        return response.Response(ret)
 
     def get_products(self):
         ret = []
@@ -340,3 +201,24 @@ class ServiceTreeViewSet(viewsets.ViewSet,
         return node
 
 
+class UploadFileViewSet(viewsets.ViewSet):
+    """
+    文件上传
+    """
+    # permission_classes = [IsAuthenticated]
+    parser_classes = (MultiPartParser,)
+
+    def create(self, request):
+        file_obj = request.data["file"]
+        data = get_data(file_obj)
+        try:
+            ips = data.get("工作表1")[1]
+        except Exception:
+            ips = data.get("sheet_1")[1]
+        # 异步添加主机信息
+        for ip in ips:
+            server = Server.objects.filter(ip=ip)
+            if not server:
+                Server.objects.create(ip=ip)
+            get_asset.delay(ip=ip)
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -1,7 +1,7 @@
 <template>
   <div style="padding: 10px">
     <el-card shadow="always">
-    <el-form ref="searchForm" :model="searchForm" :inline="true">
+    <el-form ref="searchForm" :model="searchForm" :inline="true" size="small">
       <el-form-item>
         <el-select v-model="searchForm.idc" style="width: 150px">
           <el-option
@@ -36,13 +36,31 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-input v-model="searchForm.keywords" placeholder="请输入主机名或IP地址" style="width: 180px"></el-input>
+        <el-input v-model="searchForm.search" placeholder="请输入主机名或IP地址" style="width: 180px"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="searchClick()">搜索</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="addClick" style="float:right">新增服务器</el-button>
+        <el-button type="primary" @click="addClick" style="xfloat:right">新增服务器</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-upload
+          class="upload-demo"
+          action="http://127.0.0.1:8000/upload/file/"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          multiple
+          :limit="1"
+          :on-exceed="handleExceed"
+          :file-list="fileList">
+          <el-button>导入</el-button>
+          <div slot="tip" class="el-upload__tip"><font style="color: red">只能上传xlsx/xls</font></div>
+        </el-upload>
+      </el-form-item>
+      <el-form-item>
+      <el-button>导出</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -135,9 +153,10 @@
         :total="total_num">
       </el-pagination>
     </div>
+
     <!-- 新增服务器 -->
     <el-dialog title="新增服务器" :visible.sync="dialogVisibleForAddServer">
-      <el-form ref="addServerForm" :model="addServerForm" label-width="70px" :rules="addServerFormRules">
+      <el-form ref="addServerForm" :model="addServerForm" label-width="70px" :rules="addServerFormRules" size="small">
         <el-form-item label="IP" prop="ip">
           <el-input v-model="addServerForm.ip" placeholder="请输入IP地址"></el-input>
         </el-form-item>
@@ -150,7 +169,7 @@
 
     <!-- 修改服务器 -->
     <el-dialog title="修改服务器" :visible.sync="changeServerVisible">
-      <el-form ref="changeServerForm" :model="changeServerForm" label-width="70px" :rules="changeServerFormRules">
+      <el-form ref="changeServerForm" :model="changeServerForm" label-width="70px" :rules="changeServerFormRules" size="small">
         <el-form-item label="主机名称" prop="hostname">
           <el-input v-model="changeServerForm.hostname" :disabled="true" placeholder="请输入主机名称" disabled="disabled"></el-input>
         </el-form-item>
@@ -216,6 +235,7 @@
     data() {
       return {
         loading: false,
+        fileList: [],
         serverList: [],
         total_num: 0,
         page: 1,
@@ -388,6 +408,18 @@
       changeProduct() {
         this.serviceList = []
         this.changeServerForm.service = ''
+      },
+      handleRemove(file, fileList) {
+        console.log(file, fileList)
+      },
+      handlePreview(file) {
+        console.log(file)
+      },
+      handleExceed(files, fileList) {
+        this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+      },
+      beforeRemove(file, fileList) {
+        return this.$confirm(`确定移除 ${file.name} ？`)
       },
       editClick(row) {
         if (this.$refs['changeServerForm'] !== undefined) {

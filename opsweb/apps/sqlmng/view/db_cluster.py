@@ -12,7 +12,7 @@ class DbClusterViewSet(BaseView):
     queryset = Cluster.objects.all()
     serializer_class = DbClusterSerializer
     permission_classes = [IsSuperUser]
-    search_fields = ['name','remark']
+    search_fields = ['name', 'remark']
 
     def update(self, request, *args, **kwargs):
         data = request.data

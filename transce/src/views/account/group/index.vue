@@ -1,9 +1,10 @@
 <template>
   <div class="group">
+    <el-card>
     <div>
       <!--搜索-->
       <el-col :span="8" style="margin-bottom: 20px">
-        <el-input placeholder="搜索" v-model="params.keywords" @keyup.enter.native="searchClick">
+        <el-input placeholder="搜索" v-model="params.search" @keyup.enter.native="searchClick">
           <el-button slot="append" icon="el-icon-search" @click="searchClick"></el-button>
         </el-input>
       </el-col>
@@ -76,6 +77,7 @@
       @current-change="handleCurrentChange">
     </el-pagination>
     </div>
+    </el-card>
   </div>
 </template>
 
@@ -108,7 +110,7 @@ export default {
       pagesize: 2,
       params: {
         page: 1,
-        keywords: ''
+        search: ''
       }
     }
   },

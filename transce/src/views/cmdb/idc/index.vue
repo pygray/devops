@@ -3,7 +3,7 @@
     <el-card shadow="always">
     <div>
       <el-col :span="8" style="margin-bottom: 20px">
-        <el-input placeholder="搜索" v-model="params.keywords" @keyup.enter.native="searchClick">
+        <el-input placeholder="搜索" v-model="params.search" @keyup.enter.native="searchClick">
           <el-button slot="append" icon="el-icon-search" @click="searchClick"></el-button>
         </el-input>
       </el-col>
@@ -77,7 +77,7 @@
         idc_total_num: 0,
         params: {
           page: 1,
-          keywords: ''
+          search: ''
         },
         dialogVisibleForAddIdc: false,
         dialogVisibleForEdit: false,

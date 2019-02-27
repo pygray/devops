@@ -242,7 +242,7 @@ export const asyncRouterMap = [
         component: inceptionDetail,
         hidden: true,
         meta: { title: 'SQL详情', icon: 'list', roles: [''] }
-      },
+      }
     ]
   },
   {

@@ -10,8 +10,14 @@ django.setup()
 
 from cmdb.models import *
 
+
 @shared_task(name="get_assets")
 def get_asset(ip=None, group=None):
+    """
+    :param ip:
+    :param group:
+    :return:
+    """
     host_dict = {}
     rbt = ANSRunner()
     if ip:

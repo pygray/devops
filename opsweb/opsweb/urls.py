@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from rest_framework.documentation import include_docs_urls
+from cmdb.views import UploadFileViewSet
 
 from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 from rest_framework.schemas import get_schema_view
